@@ -33,10 +33,7 @@ public class UserMealsUtil {
         for (UserMeal meal : mealList) {
             LocalDate mealDate = meal.getDateTime().toLocalDate();
 
-            if (userMealCaloriesPerDay.containsKey(mealDate))
-                userMealCaloriesPerDay.merge(mealDate, meal.getCalories(), (x, y) -> x + y);
-            else
-                userMealCaloriesPerDay.put(mealDate, meal.getCalories());
+            userMealCaloriesPerDay.merge(mealDate, meal.getCalories(), Integer::sum);
         }
 
         List<UserMealWithExceed> userMealsWithExceed = new ArrayList<>();
