@@ -42,8 +42,9 @@
         <th>Дата\Время</th>
         <th>Описание</th>
         <th>Калории</th>
+        <th colspan=2>Действия</th>
     </tr>
-    <c:forEach var="meal" items="${list}">
+    <c:forEach var="meal" items="${meals}">
         <c:choose>
             <c:when test="${!meal.isExcess()}">
                 <tr class="usual">
@@ -52,11 +53,14 @@
                 <tr class="colored">
             </c:otherwise>
         </c:choose>
-            <td>${f:formatLocalDateTime(meal.getDateTime(), 'yyyy-MM-dd hh:mm')}</td>
-            <td>${meal.getDescription()}</td>
-            <td>${meal.getCalories()}</td>
+        <td>${f:formatLocalDateTime(meal.getDateTime(), 'yyyy-MM-dd hh:mm')}</td>
+        <td>${meal.getDescription()}</td>
+        <td>${meal.getCalories()}</td>
+            <td><a href="/topjava/listMeal?action=edit&mealId=<c:out value="${meal.getId()}"/>">Редактировать</a></td>
+        <td><a href="/topjava/listMeal?action=delete&mealId=<c:out value="${meal.getId()}"/>">Удалить</a></td>
         </tr>
     </c:forEach>
 </table>
+<p><a href="/topjava/listMeal?action=add">Добавить прием пищи</a></p>
 </body>
 </html>

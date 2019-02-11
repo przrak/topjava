@@ -1,0 +1,92 @@
+package ru.javawebinar.topjava.dao;
+
+import org.slf4j.Logger;
+import ru.javawebinar.topjava.model.Meal;
+
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.slf4j.LoggerFactory.getLogger;
+
+public class MealDaoImpl implements MealDao {
+    
+    private static final Logger log = getLogger(MealDaoImpl.class);
+
+    private static int id = 0;
+
+    private final List<Meal> meals = new ArrayList<>(Arrays.asList(
+            new Meal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500, generateId()),
+            new Meal(LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000, generateId()),
+            new Meal(LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500, generateId()),
+            new Meal(LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000, generateId()),
+            new Meal(LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500, generateId()),
+            new Meal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510, generateId())
+    ));
+
+    public int generateId()
+    {
+        return id++;
+    }
+
+    @Override
+    public void addMeal(Meal meal) {
+        try {
+            synchronized (meals)
+            {
+                meals.add(meal);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteMealById(int mealId) {
+        try {
+            synchronized (meals)
+            {
+                meals.removeIf(m -> mealId == m.getId());
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    @Override
+    public void updateMeal(Meal meal) {
+        try {
+            synchronized (meals)
+            {
+                Meal mealForEdit = meals.get(meals.indexOf(meal));
+                mealForEdit.setDateTime(meal.getDateTime());
+                mealForEdit.setCalories(meal.getCalories());
+                mealForEdit.setDescription(meal.getDescription());
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    @Override
+    public synchronized List<Meal> getAllMeals() {
+        return meals;
+    }
+
+    @Override
+    public Meal getMealById(int mealId) {
+        try {
+            synchronized (meals)
+            {
+                return meals.get(mealId);
+            }
+        }
+        catch (Exception e)
+        {
+            log.error(e.getMessage());
+            return null;
+        }
+    }
+}
