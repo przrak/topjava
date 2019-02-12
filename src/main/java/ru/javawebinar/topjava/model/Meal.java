@@ -62,26 +62,4 @@ public class Meal {
     public void setId(int id) {
         this.id = id;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Meal meal = (Meal) o;
-
-        if (calories != meal.calories) return false;
-        if (id != meal.id) return false;
-        if (!dateTime.equals(meal.dateTime)) return false;
-        return Objects.equals(description, meal.description);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = dateTime.hashCode();
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + calories;
-        result = 31 * result + id;
-        return result;
-    }
 }

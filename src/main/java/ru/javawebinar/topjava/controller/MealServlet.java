@@ -13,11 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -38,44 +34,45 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String forward;
-        String action = req.getParameter("action") != null ? req.getParameter("action") : "";
+        String action = req.getParameter("action") != null ?
+                req.getParameter("action") : "";
 
         switch (action)
         {
             case "delete":
             {
-                forward = LIST_MEAL;
                 int mealId = Integer.parseInt(req.getParameter("mealId"));
-                dao.deleteMealById(mealId);
-                List<MealTo> mealTo = MealsUtil.getListWithExcess(this.dao.getAllMeals(),
-                        MealDao.getCaloriesPerDay());
-                req.setAttribute("meals", mealTo);
+                dao.deleteById(mealId);
+                resp.sendRedirect("/topjava/mealServlet");
                 break;
             }
             case "edit":
             {
                 forward = ADD_OR_EDIT_MEAL;
                 int mealId = Integer.parseInt(req.getParameter("mealId"));
-                Meal meal = dao.getMealById(mealId);
+                Meal meal = dao.getById(mealId);
                 req.setAttribute("meal", meal);
+                RequestDispatcher view = req.getRequestDispatcher(forward);
+                view.forward(req, resp);
                 break;
             }
             case "add":
             {
                 forward = ADD_OR_EDIT_MEAL;
+                RequestDispatcher view = req.getRequestDispatcher(forward);
+                view.forward(req, resp);
                 break;
             }
             default:
             {
                 forward = LIST_MEAL;
-                List<MealTo> mealTo = MealsUtil.getListWithExcess(this.dao.getAllMeals(),
+                List<MealTo> mealTo = MealsUtil.getListWithExcess(this.dao.getAll(),
                         MealDao.getCaloriesPerDay());
                 req.setAttribute("meals", mealTo);
+                RequestDispatcher view = req.getRequestDispatcher(forward);
+                view.forward(req, resp);
             }
         }
-
-        RequestDispatcher view = req.getRequestDispatcher(forward);
-        view.forward(req, resp);
     }
 
     @Override
@@ -97,12 +94,12 @@ public class MealServlet extends HttpServlet {
             if (mealId != null && !mealId.isEmpty())
             {
                 meal.setId(Integer.parseInt(mealId));
-                this.dao.updateMeal(meal);
+                this.dao.update(meal);
             }
             else
             {
                 meal.setId(this.dao.generateId());
-                this.dao.addMeal(meal);
+                this.dao.add(meal);
             }
         }
         catch (Exception e)
@@ -110,10 +107,6 @@ public class MealServlet extends HttpServlet {
             log.error(e.getMessage());
         }
 
-        RequestDispatcher view = req.getRequestDispatcher(LIST_MEAL);
-        List<MealTo> mealTo = MealsUtil.getListWithExcess(this.dao.getAllMeals(),
-                MealDao.getCaloriesPerDay());
-        req.setAttribute("meals", mealTo);
-        view.forward(req, resp);
+        resp.sendRedirect("/topjava/mealServlet");
     }
 }

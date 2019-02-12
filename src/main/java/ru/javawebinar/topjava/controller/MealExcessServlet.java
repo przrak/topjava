@@ -25,7 +25,7 @@ public class MealExcessServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<MealTo> mealTo = MealsUtil.getListWithExcess(this.dao.getAllMeals(), MealDao.getCaloriesPerDay());
+        List<MealTo> mealTo = MealsUtil.getListWithExcess(this.dao.getAll(), MealDao.getCaloriesPerDay());
         req.setAttribute("list", mealTo);
         req.getRequestDispatcher("meals.jsp").forward(req, resp);
     }

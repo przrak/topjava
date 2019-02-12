@@ -33,7 +33,7 @@ public class MealDaoImpl implements MealDao {
     }
 
     @Override
-    public void addMeal(Meal meal) {
+    public void add(Meal meal) {
         try {
             synchronized (meals)
             {
@@ -45,7 +45,7 @@ public class MealDaoImpl implements MealDao {
     }
 
     @Override
-    public void deleteMealById(int mealId) {
+    public void deleteById(int mealId) {
         try {
             synchronized (meals)
             {
@@ -57,7 +57,7 @@ public class MealDaoImpl implements MealDao {
     }
 
     @Override
-    public void updateMeal(Meal meal) {
+    public void update(Meal meal) {
         try {
             synchronized (meals)
             {
@@ -72,12 +72,12 @@ public class MealDaoImpl implements MealDao {
     }
 
     @Override
-    public synchronized List<Meal> getAllMeals() {
+    public synchronized List<Meal> getAll() {
         return meals;
     }
 
     @Override
-    public Meal getMealById(int mealId) {
+    public Meal getById(int mealId) {
         try {
             synchronized (meals)
             {
