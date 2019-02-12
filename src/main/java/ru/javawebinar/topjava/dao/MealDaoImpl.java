@@ -8,6 +8,7 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -60,10 +61,10 @@ public class MealDaoImpl implements MealDao {
         try {
             synchronized (meals)
             {
-                Meal mealForEdit = meals.get(meals.indexOf(meal));
-                mealForEdit.setDateTime(meal.getDateTime());
-                mealForEdit.setCalories(meal.getCalories());
-                mealForEdit.setDescription(meal.getDescription());
+                meals.stream()
+                        .filter(m -> m.getId() == meal.getId())
+                        .findFirst()
+                        .ifPresent(oldMeal -> meals.set(meals.indexOf(oldMeal), meal));
             }
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -80,7 +81,7 @@ public class MealDaoImpl implements MealDao {
         try {
             synchronized (meals)
             {
-                return meals.get(mealId);
+                return meals.stream().filter(m -> m.getId() == mealId).findFirst().orElse(null);
             }
         }
         catch (Exception e)

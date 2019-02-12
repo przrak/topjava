@@ -56,7 +56,7 @@
         <td>${f:formatLocalDateTime(meal.getDateTime(), 'yyyy-MM-dd hh:mm')}</td>
         <td>${meal.getDescription()}</td>
         <td>${meal.getCalories()}</td>
-            <td><a href="/topjava/listMeal?action=edit&mealId=<c:out value="${meal.getId()}"/>">Редактировать</a></td>
+        <td><a href="/topjava/listMeal?action=edit&mealId=<c:out value="${meal.getId()}"/>">Редактировать</a></td>
         <td><a href="/topjava/listMeal?action=delete&mealId=<c:out value="${meal.getId()}"/>">Удалить</a></td>
         </tr>
     </c:forEach>

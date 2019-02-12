@@ -8,6 +8,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib prefix="f" uri="http://example.com/functions" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -26,21 +27,21 @@
 <%--</script>--%>
 
 <form method="POST" action='/topjava/listMeal' name="formAddMeal">
-    <%--User ID : <input type="text" readonly="readonly" name="userid"--%>
-    <%--value="<c:out value="${user.userid}" />" /> <br />--%>
-    Описание: <input type="text" name="description" value="<c:out value="${meal.getDescription()}" />"/>
+    Описание:
+    <input type="text" name="description"
+           value="<c:out value="${meal.getDescription()}" />"/>
     <br/>
-    <%--Last Name : <input--%>
-    <%--type="text" name="lastName"--%>
-    <%--value="<c:out value="${user.lastName}" />"/>--%>
-    <%--<br/>--%>
-    <%--DOB : <input--%>
-    <%--type="text" name="dob"--%>
-    <%--value="<fmt:formatDate pattern="MM/dd/yyyy" value="${user.dob}" />"/>--%>
-    <%--<br/>--%>
-    <%--Email : <input type="text" name="email"--%>
-    <%--value="<c:out value="${user.email}" />"/>--%>
-    <%--<br/>--%>
+    Калории:
+    <input type="number" name="calories"
+           value="<c:out value="${meal.getCalories()}" />"/>
+    <br/>
+    Дата/Время:
+    <input type="datetime-local" name="datetime"
+           value="<c:out value="${meal.getDateTime()}"/>"/>
+    <br/>
+    <input type="hidden" name="id"
+           value="<c:out value="${meal.getId()}"/>"/>
+    <br/>
     <input type="submit" value="Submit"/>
 </form>
 </body>
