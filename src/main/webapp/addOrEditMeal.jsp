@@ -13,20 +13,17 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <%--<link type="text/css"--%>
-    <%--href="css/ui-lightness/jquery-ui-1.8.18.custom.css" rel="stylesheet" />--%>
-    <%--<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>--%>
-    <%--<script type="text/javascript" src="js/jquery-ui-1.8.18.custom.min.js"></script>--%>
     <title>Add new meal</title>
 </head>
 <body>
-<%--<script>--%>
-<%--$(function() {--%>
-<%--$('input[name=dob]').datepicker();--%>
-<%--});--%>
-<%--</script>--%>
-
-<form method="POST" action='/topjava/listMeal' name="formAddMeal">
+<h3><a href="index.html">На главную</a></h3>
+<c:if test="${meal ne null}">
+    <h2>Форма для редактирования еды</h2>
+</c:if>
+<c:if test="${meal eq null}">
+   <h2>Форма для добавления еды</h2>
+</c:if>
+<form method="POST" action='/topjava/meals' name="formAddMeal">
     Описание:
     <input type="text" name="description"
            value="<c:out value="${meal.getDescription()}" />"/>

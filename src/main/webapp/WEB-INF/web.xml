@@ -8,32 +8,21 @@
 
     <servlet>
         <servlet-name>userServlet</servlet-name>
-        <servlet-class>ru.javawebinar.topjava.controller.UserServlet</servlet-class>
+        <servlet-class>ru.javawebinar.topjava.web.UserServlet</servlet-class>
         <load-on-startup>0</load-on-startup>
     </servlet>
     <servlet-mapping>
         <servlet-name>userServlet</servlet-name>
         <url-pattern>/users</url-pattern>
     </servlet-mapping>
-    
-    <servlet>
-        <servlet-name>mealExcessServlet</servlet-name>
-        <servlet-class>ru.javawebinar.topjava.controller.MealExcessServlet</servlet-class>
-        <load-on-startup>0</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>mealExcessServlet</servlet-name>
-        <url-pattern>/meals</url-pattern>
-    </servlet-mapping>
 
     <servlet>
         <servlet-name>mealServlet</servlet-name>
-        <servlet-class>ru.javawebinar.topjava.controller.MealServlet</servlet-class>
+        <servlet-class>ru.javawebinar.topjava.web.MealServlet</servlet-class>
         <load-on-startup>0</load-on-startup>
     </servlet>
     <servlet-mapping>
         <servlet-name>mealServlet</servlet-name>
-        <url-pattern>/listMeal</url-pattern>
-        <url-pattern>/mealServlet</url-pattern>
+        <url-pattern>/meals</url-pattern>
     </servlet-mapping>
 </web-app>

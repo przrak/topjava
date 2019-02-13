@@ -36,27 +36,24 @@
     </style>
 </head>
 <body>
-
+<h3><a href="index.html">На главную</a></h3>
 <table>
     <tr>
         <th>Дата\Время</th>
         <th>Описание</th>
         <th>Калории</th>
+        <th colspan=2>Действия</th>
     </tr>
-    <c:forEach var="meal" items="${list}">
-        <c:choose>
-            <c:when test="${!meal.isExcess()}">
-                <tr class="usual">
-            </c:when>
-            <c:otherwise>
-                <tr class="colored">
-            </c:otherwise>
-        </c:choose>
+    <c:forEach var="meal" items="${meals}">
+        <tr class="${!meal.isExcess() ? 'usual' : 'colored'}">
             <td>${f:formatLocalDateTime(meal.getDateTime(), 'yyyy-MM-dd hh:mm')}</td>
             <td>${meal.getDescription()}</td>
             <td>${meal.getCalories()}</td>
+            <td><a href="/topjava/meals?action=edit&mealId=<c:out value="${meal.getId()}"/>">Редактировать</a></td>
+            <td><a href="/topjava/meals?action=delete&mealId=<c:out value="${meal.getId()}"/>">Удалить</a></td>
         </tr>
     </c:forEach>
 </table>
+<p><a href="/topjava/meals?action=add">Добавить прием пищи</a></p>
 </body>
 </html>

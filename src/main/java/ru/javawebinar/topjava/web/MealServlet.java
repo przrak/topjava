@@ -1,4 +1,4 @@
-package ru.javawebinar.topjava.controller;
+package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.dao.MealDao;
@@ -7,7 +7,6 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +20,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class MealServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final String ADD_OR_EDIT_MEAL = "/addOrEditMeal.jsp";
-    private static final String LIST_MEAL = "/listMeal.jsp";
+    private static final String LIST_MEAL = "/meals.jsp";
 
     private static final Logger log = getLogger(MealServlet.class);
 
@@ -35,7 +34,7 @@ public class MealServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String forward;
         String action = req.getParameter("action") != null ?
-                req.getParameter("action") : "";
+            req.getParameter("action") : "";
 
         switch (action)
         {
@@ -43,7 +42,7 @@ public class MealServlet extends HttpServlet {
             {
                 int mealId = Integer.parseInt(req.getParameter("mealId"));
                 dao.deleteById(mealId);
-                resp.sendRedirect("/topjava/mealServlet");
+                resp.sendRedirect("meals");
                 break;
             }
             case "edit":
@@ -52,25 +51,21 @@ public class MealServlet extends HttpServlet {
                 int mealId = Integer.parseInt(req.getParameter("mealId"));
                 Meal meal = dao.getById(mealId);
                 req.setAttribute("meal", meal);
-                RequestDispatcher view = req.getRequestDispatcher(forward);
-                view.forward(req, resp);
+                req.getRequestDispatcher(forward).forward(req, resp);
                 break;
             }
             case "add":
             {
                 forward = ADD_OR_EDIT_MEAL;
-                RequestDispatcher view = req.getRequestDispatcher(forward);
-                view.forward(req, resp);
+                req.getRequestDispatcher(forward).forward(req, resp);
                 break;
             }
             default:
             {
                 forward = LIST_MEAL;
-                List<MealTo> mealTo = MealsUtil.getListWithExcess(this.dao.getAll(),
-                        MealDao.getCaloriesPerDay());
+                List<MealTo> mealTo = MealsUtil.getListWithExcess(this.dao.getAll());
                 req.setAttribute("meals", mealTo);
-                RequestDispatcher view = req.getRequestDispatcher(forward);
-                view.forward(req, resp);
+                req.getRequestDispatcher(forward).forward(req, resp);
             }
         }
     }
@@ -98,7 +93,6 @@ public class MealServlet extends HttpServlet {
             }
             else
             {
-                meal.setId(this.dao.generateId());
                 this.dao.add(meal);
             }
         }
@@ -107,6 +101,6 @@ public class MealServlet extends HttpServlet {
             log.error(e.getMessage());
         }
 
-        resp.sendRedirect("/topjava/mealServlet");
+        resp.sendRedirect("meals");
     }
 }

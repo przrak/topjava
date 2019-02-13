@@ -10,10 +10,4 @@ public interface MealDao {
     void update(Meal meal);
     List<Meal> getAll();
     Meal getById(int mealId);
-
-    int generateId();
-    static int getCaloriesPerDay()
-    {
-        return 2000;
-    }
 }

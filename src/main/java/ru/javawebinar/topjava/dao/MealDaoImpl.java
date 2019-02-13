@@ -27,7 +27,7 @@ public class MealDaoImpl implements MealDao {
             new Meal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510, generateId())
     ));
 
-    public int generateId()
+    public synchronized int generateId()
     {
         return id++;
     }
@@ -37,6 +37,7 @@ public class MealDaoImpl implements MealDao {
         try {
             synchronized (meals)
             {
+                meal.setId(generateId());
                 meals.add(meal);
             }
         } catch (Exception e) {
