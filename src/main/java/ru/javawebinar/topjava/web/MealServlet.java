@@ -26,7 +26,8 @@ public class MealServlet extends HttpServlet {
 
     private MealDao dao;
 
-    public MealServlet() {
+    @Override
+    public void init() throws ServletException {
         this.dao = new MealDaoImpl();
     }
 
@@ -41,7 +42,7 @@ public class MealServlet extends HttpServlet {
             case "delete":
             {
                 int mealId = Integer.parseInt(req.getParameter("mealId"));
-                dao.deleteById(mealId);
+                dao.delete(mealId);
                 resp.sendRedirect("meals");
                 break;
             }
@@ -49,7 +50,7 @@ public class MealServlet extends HttpServlet {
             {
                 forward = ADD_OR_EDIT_MEAL;
                 int mealId = Integer.parseInt(req.getParameter("mealId"));
-                Meal meal = dao.getById(mealId);
+                Meal meal = dao.get(mealId);
                 req.setAttribute("meal", meal);
                 req.getRequestDispatcher(forward).forward(req, resp);
                 break;
