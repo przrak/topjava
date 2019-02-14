@@ -21,8 +21,6 @@ public class MealServlet extends HttpServlet {
     private static final String ADD_OR_EDIT_MEAL = "/addOrEditMeal.jsp";
     private static final String LIST_MEAL = "/meals.jsp";
 
-    private static final Logger log = getLogger(MealServlet.class);
-
     private MealDao dao;
 
     @Override
@@ -47,12 +45,9 @@ public class MealServlet extends HttpServlet {
             }
             case "edit":
             {
-                forward = ADD_OR_EDIT_MEAL;
                 int mealId = Integer.parseInt(req.getParameter("mealId"));
                 Meal meal = dao.get(mealId);
                 req.setAttribute("meal", meal);
-                req.getRequestDispatcher(forward).forward(req, resp);
-                break;
             }
             case "add":
             {
@@ -73,32 +68,24 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
-        try
+
+        String mealId = req.getParameter("id");
+        String datetime = req.getParameter("datetime");
+        LocalDateTime localDateTime = LocalDateTime.parse(datetime);
+        int calories = !req.getParameter("calories").isEmpty() ?
+                Integer.parseInt(req.getParameter("calories")) : 0;
+
+        Meal meal = new Meal(localDateTime,
+            req.getParameter("description"), calories);
+
+        if (mealId != null && !mealId.isEmpty())
         {
-            String mealId = req.getParameter("id");
-            String datetime = req.getParameter("datetime");
-            LocalDateTime localDateTime = LocalDateTime.parse(datetime);
-            int calories = !req.getParameter("calories").isEmpty() ?
-                    Integer.parseInt(req.getParameter("calories")) : 0;
-
-            Meal meal = new Meal();
-            meal.setDateTime(localDateTime);
-            meal.setDescription(req.getParameter("description"));
-            meal.setCalories(calories);
-
-            if (mealId != null && !mealId.isEmpty())
-            {
-                meal.setId(Integer.parseInt(mealId));
-                this.dao.update(meal);
-            }
-            else
-            {
-                this.dao.add(meal);
-            }
+            meal.setId(Integer.parseInt(mealId));
+            this.dao.update(meal);
         }
-        catch (Exception e)
+        else
         {
-            log.error(e.getMessage());
+            this.dao.add(meal);
         }
 
         resp.sendRedirect("meals");

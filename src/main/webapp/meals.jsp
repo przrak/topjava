@@ -46,14 +46,14 @@
     </tr>
     <c:forEach var="meal" items="${meals}">
         <tr class="${!meal.isExcess() ? 'usual' : 'colored'}">
-            <td>${f:formatLocalDateTime(meal.getDateTime(), 'yyyy-MM-dd hh:mm')}</td>
+            <td>${f:formatLocalDateTime(meal.getDateTime())}</td>
             <td>${meal.getDescription()}</td>
             <td>${meal.getCalories()}</td>
-            <td><a href="/topjava/meals?action=edit&mealId=<c:out value="${meal.getId()}"/>">Редактировать</a></td>
-            <td><a href="/topjava/meals?action=delete&mealId=<c:out value="${meal.getId()}"/>">Удалить</a></td>
+            <td><a href="meals?action=edit&mealId=<c:out value="${meal.getId()}"/>">Редактировать</a></td>
+            <td><a href="meals?action=delete&mealId=<c:out value="${meal.getId()}"/>">Удалить</a></td>
         </tr>
     </c:forEach>
 </table>
-<p><a href="/topjava/meals?action=add">Добавить прием пищи</a></p>
+<p><a href="meals?action=add">Добавить прием пищи</a></p>
 </body>
 </html>

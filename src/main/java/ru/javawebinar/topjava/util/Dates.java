@@ -4,16 +4,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public final class Dates {
-    private static DateTimeFormatter dateTimeFormatter;
+    private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm");
 
-    private Dates() {
+    private Dates() {}
 
-    }
-
-    public static String formatLocalDateTime(LocalDateTime localDateTime, String pattern) {
-        if (dateTimeFormatter == null)
-            dateTimeFormatter = DateTimeFormatter.ofPattern(pattern);
-
+    public static String formatLocalDateTime(LocalDateTime localDateTime) {
         return localDateTime.format(dateTimeFormatter);
     }
 }
