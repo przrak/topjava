@@ -18,7 +18,6 @@ import java.util.List;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class MealServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
     private static final String ADD_OR_EDIT_MEAL = "/addOrEditMeal.jsp";
     private static final String LIST_MEAL = "/meals.jsp";
 
