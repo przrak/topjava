@@ -13,31 +13,31 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Add new meal</title>
+    <title>Add new userMeal</title>
 </head>
 <body>
 <h3><a href="index.html">На главную</a></h3>
-<c:if test="${meal ne null}">
+<c:if test="${userMeal ne null}">
     <h2>Форма для редактирования еды</h2>
 </c:if>
-<c:if test="${meal eq null}">
+<c:if test="${userMeal eq null}">
    <h2>Форма для добавления еды</h2>
 </c:if>
-<form method="POST" action='/topjava/meals' name="formAddMeal">
+<form method="POST" action='meals' name="formAddMeal">
     Описание:
     <input type="text" name="description"
-           value="<c:out value="${meal.getDescription()}" />"/>
+           value="<c:out value="${userMeal.getDescription()}" />"/>
     <br/>
     Калории:
     <input type="number" name="calories"
-           value="<c:out value="${meal.getCalories()}" />"/>
+           value="<c:out value="${userMeal.getCalories()}" />"/>
     <br/>
     Дата/Время:
     <input type="datetime-local" name="datetime"
-           value="<c:out value="${meal.getDateTime()}"/>"/>
+           value="<c:out value="${userMeal.getDateTime()}"/>"/>
     <br/>
     <input type="hidden" name="id"
-           value="<c:out value="${meal.getId()}"/>"/>
+           value="<c:out value="${userMeal.getId()}"/>"/>
     <br/>
     <input type="submit" value="Submit"/>
 </form>

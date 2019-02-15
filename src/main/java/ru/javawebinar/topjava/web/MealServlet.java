@@ -1,10 +1,9 @@
 package ru.javawebinar.topjava.web;
 
-import org.slf4j.Logger;
 import ru.javawebinar.topjava.dao.MealDao;
 import ru.javawebinar.topjava.dao.MealDaoImpl;
-import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.MealTo;
+import ru.javawebinar.topjava.model.UserMeal;
+import ru.javawebinar.topjava.model.UserMealWithExceed;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.servlet.ServletException;
@@ -46,8 +45,8 @@ public class MealServlet extends HttpServlet {
             case "edit":
             {
                 int mealId = Integer.parseInt(req.getParameter("mealId"));
-                Meal meal = dao.get(mealId);
-                req.setAttribute("meal", meal);
+                UserMeal userMeal = dao.get(mealId);
+                req.setAttribute("userMeal", userMeal);
             }
             case "add":
             {
@@ -58,8 +57,8 @@ public class MealServlet extends HttpServlet {
             default:
             {
                 forward = LIST_MEAL;
-                List<MealTo> mealTo = MealsUtil.getListWithExcess(this.dao.getAll());
-                req.setAttribute("meals", mealTo);
+                List<UserMealWithExceed> userMealWithExceed = MealsUtil.getListWithExceed(this.dao.getAll());
+                req.setAttribute("mealList", userMealWithExceed);
                 req.getRequestDispatcher(forward).forward(req, resp);
             }
         }
@@ -75,17 +74,17 @@ public class MealServlet extends HttpServlet {
         int calories = !req.getParameter("calories").isEmpty() ?
                 Integer.parseInt(req.getParameter("calories")) : 0;
 
-        Meal meal = new Meal(localDateTime,
+        UserMeal userMeal = new UserMeal(localDateTime,
             req.getParameter("description"), calories);
 
         if (mealId != null && !mealId.isEmpty())
         {
-            meal.setId(Integer.parseInt(mealId));
-            this.dao.update(meal);
+            userMeal.setId(Integer.parseInt(mealId));
+            this.dao.update(userMeal);
         }
         else
         {
-            this.dao.add(meal);
+            this.dao.add(userMeal);
         }
 
         resp.sendRedirect("meals");

@@ -44,13 +44,14 @@
         <th>Калории</th>
         <th colspan=2>Действия</th>
     </tr>
-    <c:forEach var="meal" items="${meals}">
-        <tr class="${!meal.isExcess() ? 'usual' : 'colored'}">
-            <td>${f:formatLocalDateTime(meal.getDateTime())}</td>
-            <td>${meal.getDescription()}</td>
-            <td>${meal.getCalories()}</td>
-            <td><a href="meals?action=edit&mealId=<c:out value="${meal.getId()}"/>">Редактировать</a></td>
-            <td><a href="meals?action=delete&mealId=<c:out value="${meal.getId()}"/>">Удалить</a></td>
+    <c:forEach items="${mealList}" var="userMeal" >
+        <jsp:useBean id="userMeal" type="ru.javawebinar.topjava.model.UserMealWithExceed"/>
+        <tr class="${!userMeal.excess ? 'usual' : 'colored'}">
+            <td>${f:formatLocalDateTime(userMeal.dateTime)}</td>
+            <td>${userMeal.description}</td>
+            <td>${userMeal.calories}</td>
+            <td><a href="meals?action=edit&mealId=<c:out value="${userMeal.id}"/>">Редактировать</a></td>
+            <td><a href="meals?action=delete&mealId=<c:out value="${userMeal.id}"/>">Удалить</a></td>
         </tr>
     </c:forEach>
 </table>

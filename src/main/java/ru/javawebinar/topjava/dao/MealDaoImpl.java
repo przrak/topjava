@@ -1,6 +1,6 @@
 package ru.javawebinar.topjava.dao;
 
-import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.model.UserMeal;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -13,23 +13,23 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class MealDaoImpl implements MealDao {
 
-    private final Map<Integer, Meal> meals = new ConcurrentHashMap<>();
+    private final Map<Integer, UserMeal> meals = new ConcurrentHashMap<>();
     private AtomicInteger id = new AtomicInteger();
 
     public MealDaoImpl() {
-        Meal meal1 = new Meal(generateId(), LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500);
-        Meal meal2 = new Meal(generateId(), LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000);
-        Meal meal3 = new Meal(generateId(), LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500);
-        Meal meal4 = new Meal(generateId(), LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000);
-        Meal meal5 = new Meal(generateId(), LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500);
-        Meal meal6 = new Meal(generateId(), LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510);
+        UserMeal userMeal1 = new UserMeal(generateId(), LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500);
+        UserMeal userMeal2 = new UserMeal(generateId(), LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000);
+        UserMeal userMeal3 = new UserMeal(generateId(), LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500);
+        UserMeal userMeal4 = new UserMeal(generateId(), LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000);
+        UserMeal userMeal5 = new UserMeal(generateId(), LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500);
+        UserMeal userMeal6 = new UserMeal(generateId(), LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510);
 
-        meals.put(meal1.getId(), meal1);
-        meals.put(meal2.getId(), meal2);
-        meals.put(meal3.getId(), meal3);
-        meals.put(meal4.getId(), meal4);
-        meals.put(meal5.getId(), meal5);
-        meals.put(meal6.getId(), meal6);
+        meals.put(userMeal1.getId(), userMeal1);
+        meals.put(userMeal2.getId(), userMeal2);
+        meals.put(userMeal3.getId(), userMeal3);
+        meals.put(userMeal4.getId(), userMeal4);
+        meals.put(userMeal5.getId(), userMeal5);
+        meals.put(userMeal6.getId(), userMeal6);
     }
 
     private int generateId() {
@@ -37,21 +37,21 @@ public class MealDaoImpl implements MealDao {
     }
 
     @Override
-    public Meal add(Meal meal) {
-        meal.setId(generateId());
-        meals.put(meal.getId(), meal);
-        return meal;
+    public UserMeal add(UserMeal userMeal) {
+        userMeal.setId(generateId());
+        meals.put(userMeal.getId(), userMeal);
+        return userMeal;
     }
 
     @Override
-    public Meal get(int mealId) {
+    public UserMeal get(int mealId) {
         return meals.get(mealId);
     }
 
     @Override
-    public Meal update(Meal meal) {
-        meals.replace(meal.getId(), meal);
-        return meal;
+    public UserMeal update(UserMeal userMeal) {
+        meals.replace(userMeal.getId(), userMeal);
+        return userMeal;
     }
 
     @Override
@@ -60,8 +60,8 @@ public class MealDaoImpl implements MealDao {
     }
 
     @Override
-    public List<Meal> getAll() {
-        Collection<Meal> c = meals.values();
+    public List<UserMeal> getAll() {
+        Collection<UserMeal> c = meals.values();
         return new ArrayList<>(c);
     }
 }

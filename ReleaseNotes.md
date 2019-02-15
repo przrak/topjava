@@ -50,7 +50,7 @@
   - заменил неработающий  DependencyCi на [VersionEye](https://www.versioneye.com/) c проверкой зависимостей на uptodate
   - починил `CrudUserRepository.getWithMeals()` через `@EntityGraph`. С неколькими ролями (у админа) еда дублируется
   - починил тесты контроллеров с профилем JDBC (`JpaUtil` отсутствует в контексте JDBC)
-  - переименовал `meal.jsp/user.jsp` в `mealForm.jsp/userForm.jsp`
+  - переименовал `userMeal.jsp/user.jsp` в `mealForm.jsp/userForm.jsp`
   - в `InMemoryMealRepositoryImpl.save()` сделал update атомарным
   - переименовал методы сервисов `save` в `create`
   - переименовал и cделал классы `BaseEntity` и `NamedEntity` абстрактными
@@ -79,7 +79,7 @@
   - обработку запрета модификации системный юзеров через универсальный `ApplicationException`
  - рефакторинг
    - сделал `@EntityGraph` через `attributePaths`
-   - реализаовал обработку дублирования `user.email` и `meal.dateTime` через [Controller Based Exception Handling](https://spring.io/blog/2013/11/01/exception-handling-in-spring-mvc#controller-based-exception-handling)
+   - реализаовал обработку дублирования `user.email` и `userMeal.dateTime` через [Controller Based Exception Handling](https://spring.io/blog/2013/11/01/exception-handling-in-spring-mvc#controller-based-exception-handling)
    - поменял отключение транзакционности в тестах через `@Transactional(propagation = Propagation.NEVER)`
    - сделал выбор в сервлете через switch
    - [все логгирование сделал через {} форматирование](http://stackoverflow.com/questions/10555409/logger-slf4j-advantages-of-formatting-with-instead-of-string-concatenation) и поправил его в контроллерах (поле проверки id)
@@ -147,7 +147,7 @@
   - [i18n в JavaScript](http://stackoverflow.com/a/6242840/548473)
   - проверку предусловий и видео <a href="https://drive.google.com/open?id=0B9Ye2auQ_NsFU005ZzBNZmZnTVU">Методы улучшения качества кода</a>
   - интеграцию с <a href="https://www.codacy.com/">проверкой кода в Codacy</a>
-  - [сравнение вермени исполнения запросов при различных meals индексах](https://drive.google.com/open?id=0B9Ye2auQ_NsFX3RLcnJCWmQ2Y0U)
+  - [сравнение вермени исполнения запросов при различных userMeals индексах](https://drive.google.com/open?id=0B9Ye2auQ_NsFX3RLcnJCWmQ2Y0U)
 - tomcat7-maven-plugin плагин перключили на Tomcat 8 (cargo-maven2-plugin)
 - рефакторинг 
   - обработка ошибок сделал с array
@@ -157,7 +157,7 @@
 ### Topjava 3-6
 - добавил
   - [выпускной проект](https://drive.google.com/open?id=0B9Ye2auQ_NsFcG83dEVDVTVMamc)
-  - в таблицу meals составной индекс 
+  - в таблицу userMeals составной индекс 
   - константы `Profiles.ACTIVE_DB`, `Profiles.DB_IMPLEMENTATION`
   - проверки и тесты на `NotFound` для `UserMealService.getWithUser` и  `UserService.getWithMeals`
   - в MockMvc фильтр CharacterEncodingFilter
