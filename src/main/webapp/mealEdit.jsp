@@ -17,29 +17,26 @@
 </head>
 <body>
 <h3><a href="index.html">На главную</a></h3>
-<c:if test="${userMeal ne null}">
-    <h2>Форма для редактирования еды</h2>
-</c:if>
-<c:if test="${userMeal eq null}">
-   <h2>Форма для добавления еды</h2>
-</c:if>
-<form method="POST" action='meals' name="formAddMeal">
+<jsp:useBean id="meal" type="ru.javawebinar.topjava.model.UserMeal" scope="request"/>
+<%--<c:if test="${meal ne null}">--%>
+    <%--<h2>Форма для редактирования еды</h2>--%>
+<%--</c:if>--%>
+<%--<c:if test="${meal eq null}">--%>
+   <%--<h2>Форма для добавления еды</h2>--%>
+<%--</c:if>--%>
+<form method="POST" action='mealList'>
+    <input type="hidden" name="id" value="${meal.id}"/>
+    Дата/Время:
+    <input type="datetime-local" name="dateTime" value="${meal.dateTime}"/>
+    <br/>
     Описание:
-    <input type="text" name="description"
-           value="<c:out value="${userMeal.getDescription()}" />"/>
+    <input type="text" name="description" value="${meal.description}"/>
     <br/>
     Калории:
-    <input type="number" name="calories"
-           value="<c:out value="${userMeal.getCalories()}" />"/>
+    <input type="number" name="calories" value="${meal.calories}"/>
     <br/>
-    Дата/Время:
-    <input type="datetime-local" name="datetime"
-           value="<c:out value="${userMeal.getDateTime()}"/>"/>
-    <br/>
-    <input type="hidden" name="id"
-           value="<c:out value="${userMeal.getId()}"/>"/>
-    <br/>
-    <input type="submit" value="Submit"/>
+    <button type="submit">Save</button>
+    <button onclick="window.history.back()">Cancel</button>
 </form>
 </body>
 </html>
