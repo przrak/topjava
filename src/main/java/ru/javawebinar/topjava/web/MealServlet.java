@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
 import javax.servlet.ServletConfig;
@@ -12,10 +11,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class MealServlet extends HttpServlet {
@@ -43,15 +45,37 @@ public class MealServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String id = request.getParameter("id");
+        //значит это фильтрация
+        if (id == null)
+        {
+            log.info("Фильтрация");
+            Map<String, String> filterMap = new HashMap<>();
+            filterMap.put("startDate", request.getParameter("startDate"));
+            filterMap.put("endDate", request.getParameter("endDate"));
+            filterMap.put("startTime", request.getParameter("startTime"));
+            filterMap.put("endTime", request.getParameter("endTime"));
+            HttpSession session = request.getSession(false);
+            if (request.getParameter("reset") == null)
+            {
+                session.setAttribute("filterData", filterMap);
+            }
+            else
+            {
+                session.setAttribute("filterData", null);
+            }
+        }
+        else
+        {
+            Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
+                    LocalDateTime.parse(request.getParameter("dateTime")),
+                    request.getParameter("description"),
+                    Integer.parseInt(request.getParameter("calories")), 1);
 
-        Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
-                LocalDateTime.parse(request.getParameter("dateTime")),
-                request.getParameter("description"),
-                Integer.parseInt(request.getParameter("calories")), 1);
-
-        log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
-        mealRestController.create(meal);
+            log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
+            mealRestController.create(meal);
+        }
         response.sendRedirect("meals");
+
     }
 
     @Override
@@ -76,8 +100,25 @@ public class MealServlet extends HttpServlet {
             case "all":
             default:
                 log.info("getAll");
-                request.setAttribute("meals",
-                        MealsUtil.getWithExcess(mealRestController.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY));
+//                Object startDate = request.getAttribute("startDate");
+//                Object endDate = request.getAttribute("endDate");
+//                Object startTime = request.getAttribute("startTime");
+//                Object endTime = request.getAttribute("endTime");
+
+                if (request.getSession().getAttribute("filterData") != null)
+                {
+                    HashMap map = (HashMap) request.getSession().getAttribute("filterData");
+                    request.setAttribute("startDate", map.get("startDate"));
+                    request.setAttribute("endDate", map.get("endDate"));
+                    request.setAttribute("startTime", map.get("startTime"));
+                    request.setAttribute("endTime", map.get("endTime"));
+                    request.setAttribute("meals", mealRestController.getAllByDateTime(map));
+                }
+                else
+                {
+                    request.setAttribute("meals", mealRestController.getAll());
+                }
+
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }

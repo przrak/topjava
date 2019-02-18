@@ -22,6 +22,22 @@
     <h2>Meals</h2>
     <a href="meals?action=create">Add Meal</a>
     <hr/>
+    <form action="meals" method="post">
+        <dl>
+            <dt>От даты:</dt>
+            <dd><input type="date" value="${startDate}" name="startDate"></dd>
+            <dt>До даты:</dt>
+            <dd><input type="date" value="${endDate}" name="endDate"></dd>
+        </dl>
+        <dl>
+            <dt>От времени:</dt>
+            <dd><input type="time" size=40 value="${startTime}" name="startTime"></dd>
+            <dt>До времени:</dt>
+            <dd><input type="time" size=40 value="${endTime}" name="endTime"></dd>
+        </dl>
+        <button type="submit">Filter</button>
+        <button type="submit" name="reset" value="true">Reset</button>
+    </form>
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
         <tr>

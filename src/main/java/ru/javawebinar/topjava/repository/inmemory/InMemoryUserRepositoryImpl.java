@@ -22,11 +22,6 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
     private Map<Integer, User> repository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
 
-    {
-        save(new User(counter.incrementAndGet(), "Dima", "dima@yandex.ru", "123456", Role.ROLE_USER));
-        save(new User(counter.incrementAndGet(), "Alex", "alex@yandex.ru", "654321", Role.ROLE_USER));
-    }
-
     @Override
     public boolean delete(int id) {
         log.info("delete {}", id);
