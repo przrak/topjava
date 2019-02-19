@@ -49,13 +49,13 @@ public class MealServlet extends HttpServlet {
         if (id == null)
         {
             log.info("Фильтрация");
-            LocalDate startDate = request.getParameter("startDate") != null ?
+            LocalDate startDate = !request.getParameter("startDate").isEmpty() ?
                 LocalDate.parse(request.getParameter("startDate"), DateTimeUtil.DATE_FORMATTER) : null;
-            LocalDate endDate = request.getParameter("endDate") != null ?
+            LocalDate endDate = !request.getParameter("endDate").isEmpty() ?
                 LocalDate.parse(request.getParameter("endDate"), DateTimeUtil.DATE_FORMATTER) : null;
-            LocalTime startTime = request.getParameter("startTime") != null ?
+            LocalTime startTime = !request.getParameter("startTime").isEmpty() ?
                 LocalTime.parse(request.getParameter("startTime"), DateTimeUtil.TIME_FORMATTER) : null;
-            LocalTime endTime = request.getParameter("endTime") != null ?
+            LocalTime endTime = !request.getParameter("endTime").isEmpty() ?
                 LocalTime.parse(request.getParameter("endTime"), DateTimeUtil.TIME_FORMATTER) : null;
 
             request.setAttribute("meals", mealRestController.getAllByDateTime(startDate, endDate,
@@ -67,10 +67,13 @@ public class MealServlet extends HttpServlet {
             Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
                     LocalDateTime.parse(request.getParameter("dateTime")),
                     request.getParameter("description"),
-                    Integer.parseInt(request.getParameter("calories")), 1);
+                    Integer.parseInt(request.getParameter("calories")), SecurityUtil.authUserId());
 
             log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
-            mealRestController.create(meal);
+            if (meal.isNew())
+                mealRestController.create(meal);
+            else
+                mealRestController.update(meal, Integer.valueOf(id));
             response.sendRedirect("meals");
         }
     }
