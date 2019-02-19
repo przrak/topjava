@@ -11,7 +11,6 @@ import ru.javawebinar.topjava.util.MealsUtil;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -67,14 +66,15 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     }
 
     @Override
-    public List<Meal> getAllByDateTime(int userId, Map<String, String> filterData) {
+    public List<Meal> getAllByDateTime(int userId, LocalDate startDate, LocalDate endDate,
+                                       LocalTime startTime, LocalTime endTime) {
         log.info("getAllByDate");
 
         return getStream(userId)
-                .filter(meal -> (DateTimeUtil.isBetweenDate(meal.getDate(),
-                        filterData.get("startDate"), filterData.get("endDate"))))
-                .filter(meal -> (DateTimeUtil.isBetweenTime(meal.getTime(),
-                        filterData.get("startTime"), filterData.get("endTime"))))
+                .filter(meal -> (DateTimeUtil.isBetween(meal.getDate(),
+                    startDate, endDate)))
+                .filter(meal -> (DateTimeUtil.isBetween(meal.getTime(),
+                    startTime, endTime)))
                 .collect(Collectors.toList());
     }
 

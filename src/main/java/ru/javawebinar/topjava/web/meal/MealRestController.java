@@ -9,9 +9,13 @@ import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
+import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
+import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 import static ru.javawebinar.topjava.web.SecurityUtil.authUserCaloriesPerDay;
 import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 
@@ -24,6 +28,7 @@ public class MealRestController {
 
     public Meal create(Meal meal) {
         log.info("create {}", meal);
+        checkNew(meal);
         return service.create(meal);
     }
 
@@ -37,8 +42,9 @@ public class MealRestController {
         return service.get(id, authUserId());
     }
 
-    public void update(Meal meal) {
+    public void update(Meal meal, int id) {
         log.info("update {}", meal);
+        assureIdConsistent(meal, id);
         service.update(meal);
     }
 
@@ -48,10 +54,10 @@ public class MealRestController {
                 authUserCaloriesPerDay());
     }
 
-    public List<MealTo> getAllByDateTime(Map<String, String> filterData) {
+    public List<MealTo> getAllByDateTime(LocalDate startDate, LocalDate endDate,
+                                         LocalTime startTime, LocalTime endTime) {
         log.info("getAll with userId={}", authUserId());
-
-        return MealsUtil.getWithExcess(service.getAllByDateTime(authUserId(), filterData),
-                authUserCaloriesPerDay());
+        return MealsUtil.getWithExcess(service.getAllByDateTime(authUserId(),
+            startDate, endDate, startTime, endTime), authUserCaloriesPerDay());
     }
 }
