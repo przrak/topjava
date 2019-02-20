@@ -12,7 +12,6 @@ import ru.javawebinar.topjava.util.MealsUtil;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Map;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
@@ -50,14 +49,12 @@ public class MealRestController {
 
     public List<MealTo> getAll() {
         log.info("getAll with userId={}", authUserId());
-        return MealsUtil.getWithExcess(service.getAll(authUserId()),
-                authUserCaloriesPerDay());
+        return service.getAll(authUserId());
     }
 
     public List<MealTo> getAllByDateTime(LocalDate startDate, LocalDate endDate,
                                          LocalTime startTime, LocalTime endTime) {
         log.info("getAll with userId={}", authUserId());
-        return MealsUtil.getWithExcess(service.getAllByDateTime(authUserId(),
-            startDate, endDate, startTime, endTime), authUserCaloriesPerDay());
+        return service.getAllByDateTime(authUserId(), startDate, endDate, startTime, endTime);
     }
 }
