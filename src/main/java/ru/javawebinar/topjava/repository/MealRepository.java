@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface MealRepository {
-    Meal save(Meal meal);
+    Meal save(Meal meal, int userId);
 
     boolean delete(int id, int userId);
 
