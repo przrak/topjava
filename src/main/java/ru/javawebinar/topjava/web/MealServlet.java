@@ -20,14 +20,16 @@ import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class MealServlet extends HttpServlet {
+public class MealServlet extends HttpServlet
+{
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
 
     private MealRestController mealRestController;
     private ClassPathXmlApplicationContext springContext;
 
     @Override
-    public void init(ServletConfig config) throws ServletException {
+    public void init(ServletConfig config) throws ServletException
+    {
         super.init(config);
 
         springContext = new ClassPathXmlApplicationContext("spring/spring-app.xml");
@@ -36,53 +38,52 @@ public class MealServlet extends HttpServlet {
     }
 
     @Override
-    public void destroy() {
+    public void destroy()
+    {
         springContext.close();
         super.destroy();
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
         request.setCharacterEncoding("UTF-8");
         String id = request.getParameter("id");
         //значит это фильтрация
         if (id == null)
         {
             log.info("Фильтрация");
-            LocalDate startDate = !request.getParameter("startDate").isEmpty() ?
-                LocalDate.parse(request.getParameter("startDate"), DateTimeUtil.DATE_FORMATTER) : LocalDate.MIN;
-            LocalDate endDate = !request.getParameter("endDate").isEmpty() ?
-                LocalDate.parse(request.getParameter("endDate"), DateTimeUtil.DATE_FORMATTER) : LocalDate.MAX;
-            LocalTime startTime = !request.getParameter("startTime").isEmpty() ?
-                LocalTime.parse(request.getParameter("startTime"), DateTimeUtil.TIME_FORMATTER) : LocalTime.MIN;
-            LocalTime endTime = !request.getParameter("endTime").isEmpty() ?
-                LocalTime.parse(request.getParameter("endTime"), DateTimeUtil.TIME_FORMATTER) : LocalTime.MAX;
-
-            request.setAttribute("meals", mealRestController.getAllByDateTime(startDate, endDate,
-                startTime, endTime));
+            request.setAttribute("meals", mealRestController.getAllByDateTime(request.getParameter("startDate"),
+                request.getParameter("endDate"), request.getParameter("startTime"), request.getParameter("endTime")));
             request.getRequestDispatcher("/meals.jsp").forward(request, response);
         }
         else
         {
             Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
-                    LocalDateTime.parse(request.getParameter("dateTime")),
-                    request.getParameter("description"),
-                    Integer.parseInt(request.getParameter("calories")));
+                LocalDateTime.parse(request.getParameter("dateTime")),
+                request.getParameter("description"),
+                Integer.parseInt(request.getParameter("calories")));
 
             log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
             if (meal.isNew())
+            {
                 mealRestController.create(meal);
+            }
             else
+            {
                 mealRestController.update(meal, Integer.valueOf(id));
+            }
             response.sendRedirect("meals");
         }
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
         String action = request.getParameter("action");
 
-        switch (action == null ? "all" : action) {
+        switch (action == null ? "all" : action)
+        {
             case "delete":
                 int id = getId(request);
                 log.info("Delete {}", id);
@@ -92,8 +93,8 @@ public class MealServlet extends HttpServlet {
             case "create":
             case "update":
                 final Meal meal = "create".equals(action) ?
-                        new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
-                        mealRestController.get(getId(request));
+                    new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
+                    mealRestController.get(getId(request));
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
                 break;
@@ -106,7 +107,8 @@ public class MealServlet extends HttpServlet {
         }
     }
 
-    private int getId(HttpServletRequest request) {
+    private int getId(HttpServletRequest request)
+    {
         String paramId = Objects.requireNonNull(request.getParameter("id"));
         return Integer.parseInt(paramId);
     }
