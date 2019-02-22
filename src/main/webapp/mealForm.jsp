@@ -4,6 +4,9 @@
 <html>
 <head>
     <title>Meal</title>
+<<<<<<< HEAD
+    <link rel="stylesheet" href="css/style.css">
+=======
     <style>
         dl {
             background: none repeat scroll 0 0 #FAFAFA;
@@ -22,6 +25,7 @@
             vertical-align: top;
         }
     </style>
+>>>>>>> db3a0e1282e7f7efd08db6b1d428db72b257aebd
 </head>
 <body>
 <section>
