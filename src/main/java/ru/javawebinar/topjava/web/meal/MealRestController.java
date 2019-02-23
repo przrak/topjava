@@ -63,21 +63,10 @@ public class MealRestController
         return service.getAll(authUserId());
     }
 
-    public List<MealTo> getAllByDateTime(String startDate, String endDate,
-                                         String startTime, String endTime)
+    public List<MealTo> getAllByDateTime(LocalDate startDate, LocalDate endDate,
+                                         LocalTime startTime, LocalTime endTime)
     {
-
-        LocalDate sd = !startDate.isEmpty() ?
-            LocalDate.parse(startDate, DateTimeUtil.DATE_FORMATTER) : LocalDate.MIN;
-        LocalDate ed = !endDate.isEmpty() ?
-            LocalDate.parse(endDate, DateTimeUtil.DATE_FORMATTER) : LocalDate.MAX;
-        LocalTime st = !startTime.isEmpty() ?
-            LocalTime.parse(startTime, DateTimeUtil.TIME_FORMATTER) : LocalTime.MIN;
-        LocalTime et = !endTime.isEmpty() ?
-            LocalTime.parse(endTime, DateTimeUtil.TIME_FORMATTER) : LocalTime.MAX;
-
-
         log.info("getAll with userId={}", authUserId());
-        return service.getAllByDateTime(authUserId(), sd, ed, st, et);
+        return service.getAllByDateTime(authUserId(), startDate, endDate, startTime, endTime);
     }
 }
