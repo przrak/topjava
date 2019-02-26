@@ -1,7 +1,5 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.bridge.SLF4JBridgeHandler;
@@ -12,6 +10,8 @@ import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.model.Meal;
 
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
 
 import static ru.javawebinar.topjava.MealTestData.*;
@@ -33,24 +33,21 @@ public class MealServiceTest {
     @Autowired
     private MealService service;
 
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    @After
-    public void tearDown() throws Exception {
-    }
-
     @Test
     public void get() {
+        Meal meal = service.get(USER_MEAL_ID, USER_ID);
+        assertMatch(meal, USER_MEAL);
     }
 
     @Test
     public void delete() {
+        service.delete(USER_MEAL_ID, USER_ID);
+        assertMatch(service.getAll(ADMIN_ID), ADMIN_MEAL);
     }
 
     @Test
     public void getBetweenDateTimes() {
+        service.getBetweenDateTimes(startDateTime, endDateTime, USER_ID);
     }
 
     @Test
@@ -61,9 +58,18 @@ public class MealServiceTest {
 
     @Test
     public void update() {
+        Meal updated = new Meal(USER_MEAL);
+        updated.setDescription("Updated Meal");
+        updated.setCalories(240);
+        service.update(updated, USER_ID);
+        assertMatch(service.get(USER_MEAL_ID, USER_ID), updated);
     }
 
     @Test
     public void create() {
+        Meal meal = new Meal(null, LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Полдник", 1000);
+        Meal created = service.create(meal, USER_ID);
+        meal.setId(created.getId());
+        assertMatch(service.getAll(USER_ID), USER_MEAL, meal);
     }
 }
