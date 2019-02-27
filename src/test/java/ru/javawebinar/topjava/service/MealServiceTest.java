@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import static ru.javawebinar.topjava.MealTestData.*;
 
 @ContextConfiguration({
+        "classpath:spring/spring-app-common.xml",
         "classpath:spring/spring-app.xml",
         "classpath:spring/spring-db.xml"
 })
@@ -41,21 +42,20 @@ public class MealServiceTest {
     @Test
     public void create() {
         Meal meal = new Meal(null, LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Полдник", 1000);
-        Meal created = service.create(meal, USER_ID);
+        Meal created = service.create(meal, ADMIN_ID);
         meal.setId(created.getId());
-        assertMatch(service.getAll(USER_ID),
-                orderedMeal(Arrays.asList(USER_MEAL_1, meal, USER_MEAL_2)));
+        assertMatch(service.getAll(ADMIN_ID), ADMIN_MEAL_3, ADMIN_MEAL_2, ADMIN_MEAL_1, meal);
     }
 
     @Test(expected = DataAccessException.class)
     public void duplicateDateCreate() throws Exception {
-        service.create(new Meal(null, LocalDateTime.of(2019, Month.FEBRUARY, 26, 19, 13), "Другой Обед", 700), USER_ID);
+        service.create(new Meal(null, LocalDateTime.of(2019, Month.FEBRUARY, 25, 14, 13), "Другой Обед", 700), USER_ID);
     }
 
     @Test
     public void delete() {
-        service.delete(USER_MEAL_ID_1, USER_ID);
-        assertMatch(service.getAll(USER_ID), USER_MEAL_2);
+        service.delete(ADMIN_MEAL_ID_2, ADMIN_ID);
+        assertMatch(service.getAll(ADMIN_ID), ADMIN_MEAL_3, ADMIN_MEAL_1);
     }
 
     @Test(expected = NotFoundException.class)
@@ -71,45 +71,35 @@ public class MealServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void getNotFound() throws Exception {
-        service.get(ADMIN_MEAL_ID, USER_ID);
+        service.get(ADMIN_MEAL_ID_3, USER_ID);
     }
 
     @Test
     public void getBetweenDateTimes() {
-        LocalDateTime startDateTime = LocalDateTime.of(2019, Month.FEBRUARY, 25, 23, 0);
+        LocalDateTime startDateTime = LocalDateTime.of(2019, Month.FEBRUARY, 24, 23, 0);
         LocalDateTime endDateTime = LocalDateTime.of(2019, Month.FEBRUARY, 25, 23, 10);
         List<Meal> filteredFromBD = service.getBetweenDateTimes(startDateTime, endDateTime, USER_ID);
-        assertMatch(filteredFromBD, USER_MEAL_1);
+        assertMatch(filteredFromBD, USER_MEAL_2);
     }
 
     @Test
     public void update() {
-        Meal updated = new Meal(ADMIN_MEAL);
+        Meal updated = new Meal(ADMIN_MEAL_1);
         updated.setDescription("Updated Admin Meal");
         updated.setCalories(240);
         service.update(updated, ADMIN_ID);
-        assertMatch(service.get(ADMIN_MEAL_ID, ADMIN_ID), updated);
+        assertMatch(service.get(ADMIN_MEAL_ID_1, ADMIN_ID), updated);
     }
 
     @Test(expected = NotFoundException.class)
     public void updateNotFound() {
-        Meal updated = new Meal(ADMIN_MEAL);
-        updated.setDescription("Updated Admin Meal");
-        updated.setCalories(240);
+        Meal updated = new Meal(ADMIN_MEAL_1);
         service.update(updated, USER_ID);
-        assertMatch(service.get(ADMIN_MEAL_ID, ADMIN_ID), updated);
     }
 
     @Test
     public void getAll() {
         List<Meal> all = service.getAll(USER_ID);
-        assertMatch(all, orderedMeal(Arrays.asList(USER_MEAL_1, USER_MEAL_2)));
-    }
-
-    private List<Meal> orderedMeal (List<Meal> meals)
-    {
-        return meals.stream()
-                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
-                .collect(Collectors.toList());
+        assertMatch(all, USER_MEAL_3, USER_MEAL_2, USER_MEAL_1);
     }
 }
