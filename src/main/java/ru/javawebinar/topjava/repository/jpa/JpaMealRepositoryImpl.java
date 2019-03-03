@@ -17,7 +17,12 @@ public class JpaMealRepositoryImpl implements MealRepository {
 
     @Override
     public Meal save(Meal meal, int userId) {
-        return null;
+        if (meal.isNew()) {
+            em.persist(meal);
+            return meal;
+        } else {
+            return em.merge(meal);
+        }
     }
 
     @Override
@@ -27,7 +32,10 @@ public class JpaMealRepositoryImpl implements MealRepository {
 
     @Override
     public Meal get(int id, int userId) {
-        return null;
+        return em.createNamedQuery(Meal.BY_ID, Meal.class)
+                .setParameter(1, id)
+                .setParameter(2, userId)
+                .getSingleResult();
     }
 
     @Override
