@@ -1,16 +1,28 @@
 package ru.javawebinar.topjava.model;
 
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+@NamedQueries({
+        @NamedQuery(name = Meal.ALL_SORTED, query = "SELECT m FROM Meal m WHERE m.user.id = ?1 ORDER BY m.dateTime DESC"),
+})
+@Entity
+@Table(name = "meals", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"}, name = "meals_unique_user_datetime_idx")})
 public class Meal extends AbstractBaseEntity {
+
+    public static final String ALL_SORTED = "Meal.getAllSorted";
+
+    @Column(name = "date_time", columnDefinition = "timestamp default now()")
+    @NotNull
     private LocalDateTime dateTime;
 
+    @Column(name = "description")
     private String description;
 
+    @Column(name = "calories")
     private int calories;
 
     @ManyToOne(fetch = FetchType.LAZY)
