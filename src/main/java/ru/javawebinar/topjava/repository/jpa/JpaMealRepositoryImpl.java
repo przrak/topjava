@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.repository.jpa;
 
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
 
 import javax.persistence.EntityManager;
@@ -17,6 +18,7 @@ public class JpaMealRepositoryImpl implements MealRepository {
 
     @Override
     public Meal save(Meal meal, int userId) {
+        meal.setUser(em.find(User.class, userId));
         if (meal.isNew()) {
             em.persist(meal);
             return meal;
