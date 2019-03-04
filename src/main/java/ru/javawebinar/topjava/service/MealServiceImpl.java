@@ -29,6 +29,7 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
+    @Transactional
     public void delete(int id, int userId) {
         checkNotFoundWithId(repository.delete(id, userId), id);
     }
@@ -46,6 +47,7 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
+    @Transactional
     public void update(Meal meal, int userId) {
         Assert.notNull(meal, "meal must not be null");
         checkNotFoundWithId(repository.save(meal, userId), meal.getId());
