@@ -1,9 +1,9 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.AfterClass;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
+import org.junit.rules.Stopwatch;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +11,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import ru.javawebinar.topjava.TestRunTime;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.persistence.NoResultException;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
@@ -35,18 +37,39 @@ public class MealServiceTest {
         SLF4JBridgeHandler.install();
     }
 
+    private static Map<String, Long> report;
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Rule
-    public TestRunTime testRunTime = new TestRunTime();
+    public final Stopwatch stopwatch = new Stopwatch() {
+
+        /**
+         * Invoked when a test method finishes (whether passing or failing)
+         */
+        protected void finished(long nanos, Description description) {
+            long timeInMS = TimeUnit.MILLISECONDS.convert(nanos, TimeUnit.NANOSECONDS);
+            System.out.println("Method: " + description.getMethodName() + " finished, time taken " + timeInMS + " ms");
+            report.put(description.getMethodName(), timeInMS);
+        }
+
+    };
+
+    @BeforeClass
+    public static void beforeClass() throws Exception
+    {
+        report = new HashMap<>();
+    }
 
     @Autowired
     private MealService service;
 
     @AfterClass
     public static void afterClass() throws Exception {
-        System.out.println("Summary");
+        System.out.println("Summary:");
+        report.forEach((k, v) -> System.out.println("Method: " + k + " finished. Time taken: " + v + " ms"));
+        report = null;
     }
 
     @Test
