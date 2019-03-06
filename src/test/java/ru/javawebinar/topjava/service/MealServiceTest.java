@@ -1,10 +1,14 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.Stopwatch;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -14,13 +18,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
-import javax.persistence.NoResultException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.LogRecord;
+import java.util.logging.SimpleFormatter;
 
+import static org.slf4j.LoggerFactory.getLogger;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
@@ -32,6 +39,8 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @RunWith(SpringJUnit4ClassRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
+
+    private static final Logger log = getLogger(MealServiceTest.class);
 
     static {
         SLF4JBridgeHandler.install();
@@ -50,7 +59,7 @@ public class MealServiceTest {
          */
         protected void finished(long nanos, Description description) {
             long timeInMS = TimeUnit.MILLISECONDS.convert(nanos, TimeUnit.NANOSECONDS);
-            System.out.println("Method: " + description.getMethodName() + " finished, time taken " + timeInMS + " ms");
+            log.info("{} - {} ms", description.getMethodName(), timeInMS);
             report.put(description.getMethodName(), timeInMS);
         }
 
@@ -67,9 +76,9 @@ public class MealServiceTest {
 
     @AfterClass
     public static void afterClass() throws Exception {
-        System.out.printf("%-20s%-10s%n","Method name","Time taken");
-        System.out.println("-----------------------------------------------------------------");
-        report.forEach((k, v) -> System.out.printf("%-20s%-10s%n", k, v + " ms"));
+        log.info("--------------------------------------------");
+        report.forEach((k, v) -> log.info(String.format("%-20s%-10s", k, v + "ms")));
+        log.info("--------------------------------------------");
         report.clear();
     }
 
