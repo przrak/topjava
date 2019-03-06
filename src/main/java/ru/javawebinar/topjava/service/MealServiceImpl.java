@@ -2,7 +2,6 @@ package ru.javawebinar.topjava.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
@@ -13,7 +12,6 @@ import java.util.List;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
 @Service
-@Transactional(readOnly = true)
 public class MealServiceImpl implements MealService {
 
     private final MealRepository repository;
@@ -29,7 +27,6 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    @Transactional
     public void delete(int id, int userId) {
         checkNotFoundWithId(repository.delete(id, userId), id);
     }
@@ -47,14 +44,12 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    @Transactional
     public void update(Meal meal, int userId) {
         Assert.notNull(meal, "meal must not be null");
         checkNotFoundWithId(repository.save(meal, userId), meal.getId());
     }
 
     @Override
-    @Transactional
     public Meal create(Meal meal, int userId) {
         Assert.notNull(meal, "meal must not be null");
         return repository.save(meal, userId);

@@ -67,9 +67,10 @@ public class MealServiceTest {
 
     @AfterClass
     public static void afterClass() throws Exception {
-        System.out.println("Summary:");
-        report.forEach((k, v) -> System.out.println("Method: " + k + " finished. Time taken: " + v + " ms"));
-        report = null;
+        System.out.printf("%-20s%-10s%n","Method name","Time taken");
+        System.out.println("-----------------------------------------------------------------");
+        report.forEach((k, v) -> System.out.printf("%-20s%-10s%n", k, v + " ms"));
+        report.clear();
     }
 
     @Test
@@ -101,7 +102,7 @@ public class MealServiceTest {
 
     @Test()
     public void getNotFound() throws Exception {
-        thrown.expect(NoResultException.class);
+        thrown.expect(NotFoundException.class);
         service.get(MEAL1_ID, ADMIN_ID);
     }
 
@@ -114,7 +115,7 @@ public class MealServiceTest {
 
     @Test
     public void updateNotFound() throws Exception {
-        thrown.expect(NoResultException.class);
+        thrown.expect(NotFoundException.class);
         service.update(MEAL1, ADMIN_ID);
     }
 
