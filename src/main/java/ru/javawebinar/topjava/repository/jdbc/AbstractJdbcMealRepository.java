@@ -15,23 +15,13 @@ import java.util.List;
 
 public abstract class AbstractJdbcMealRepository implements MealRepository
 {
-    protected static final RowMapper<Meal> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Meal.class);
+    private static final RowMapper<Meal> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Meal.class);
 
-    protected final JdbcTemplate jdbcTemplate;
+    protected JdbcTemplate jdbcTemplate;
 
-    protected final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    protected final SimpleJdbcInsert insertMeal;
-
-    public AbstractJdbcMealRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate)
-    {
-        this.insertMeal = new SimpleJdbcInsert(jdbcTemplate)
-            .withTableName("meals")
-            .usingGeneratedKeyColumns("id");
-
-        this.jdbcTemplate = jdbcTemplate;
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-    }
+    protected SimpleJdbcInsert insertMeal;
 
     @Override
     public Meal save(Meal meal, int userId)
@@ -91,8 +81,5 @@ public abstract class AbstractJdbcMealRepository implements MealRepository
             ROW_MAPPER, userId, convertDateTime(startDate), convertDateTime(endDate));
     }
 
-    protected <T> T convertDateTime(T ldc)
-    {
-        return ldc;
-    }
+    protected abstract <T> T convertDateTime(LocalDateTime ldc);
 }

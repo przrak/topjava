@@ -11,6 +11,7 @@ import ru.javawebinar.topjava.service.AbstractMealServiceTest;
 
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.Profiles.DATAJPA;
+import static ru.javawebinar.topjava.UserTestData.ADMIN;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 
 @ActiveProfiles(DATAJPA)
@@ -20,6 +21,6 @@ public class MealServiceDataJpaTest extends AbstractMealServiceTest
     public void getWithUserById() throws Exception {
         Meal meal = service.getWithUserById(ADMIN_MEAL_ID, ADMIN_ID);
         assertMatch(meal, ADMIN_MEAL1);
-        UserTestData.assertMatch(meal.getUser(), new User(100001, "Admin", "admin@gmail.com", "admin", Role.ROLE_ADMIN));
+        UserTestData.assertMatch(meal.getUser(), ADMIN);
     }
 }

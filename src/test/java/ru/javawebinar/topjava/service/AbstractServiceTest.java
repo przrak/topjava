@@ -59,14 +59,6 @@ public abstract class AbstractServiceTest
                 results +
                 "\n---------------------------------");
 
-        results = new StringBuilder();
+        results.setLength(0);
     }
-
-    public abstract void delete() throws Exception;
-    public abstract void deletedNotFound() throws Exception;
-    public abstract void create() throws Exception;
-    public abstract void get() throws Exception;
-    public abstract void getNotFound() throws Exception;
-    public abstract void update() throws Exception;
-    public abstract void getAll() throws Exception;
 }

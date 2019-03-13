@@ -11,6 +11,8 @@ import java.time.Month;
 import java.util.List;
 
 import static java.time.LocalDateTime.of;
+import static ru.javawebinar.topjava.MealTestData.ADMIN_MEAL1;
+import static ru.javawebinar.topjava.MealTestData.ADMIN_MEAL2;
 import static ru.javawebinar.topjava.Profiles.DATAJPA;
 import static ru.javawebinar.topjava.UserTestData.*;
 
@@ -22,9 +24,6 @@ public class UserServiceDataJpaTest extends AbstractUserServiceTest
     public void getWithMealById() throws Exception {
         User user = service.getWithMealById(ADMIN_ID);
         assertMatch(user, ADMIN);
-        MealTestData.assertMatch(user.getMeals(), List.of(
-            new Meal(100009, of(2015, Month.JUNE, 1, 21, 0), "Админ ужин", 1500),
-            new Meal(100008, of(2015, Month.JUNE, 1, 14, 0), "Админ ланч", 510)
-        ));
+        MealTestData.assertMatch(user.getMeals(), List.of(ADMIN_MEAL2, ADMIN_MEAL1));
     }
 }
