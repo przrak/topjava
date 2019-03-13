@@ -58,6 +58,8 @@ public abstract class AbstractServiceTest
                 "\n---------------------------------" +
                 results +
                 "\n---------------------------------");
+
+        results = new StringBuilder();
     }
 
     public abstract void delete() throws Exception;
