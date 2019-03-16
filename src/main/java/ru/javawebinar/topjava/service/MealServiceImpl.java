@@ -2,9 +2,11 @@ package ru.javawebinar.topjava.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.repository.UserRepository;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDateTime;
@@ -60,4 +62,15 @@ public class MealServiceImpl implements MealService {
     public Meal getWithUserById(int id, int userId) throws NotFoundException {
         return checkNotFoundWithId(repository.getWithUser(id, userId), id);
     }
+
+//    @Autowired
+//    private UserRepository userRepository;
+//
+//    @Transactional
+//    public Meal getWithUser(Integer id, Integer userId)
+//    {
+//        Meal meal = get(id, userId);
+//        meal.setUser(userRepository.get(userId));
+//        return meal;
+//    }
 }
