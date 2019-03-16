@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.repository.jdbc;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,7 +14,7 @@ import ru.javawebinar.topjava.repository.MealRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public abstract class AbstractJdbcMealRepository implements MealRepository
+public abstract class AbstractJdbcMealRepository<T> implements MealRepository
 {
     private static final RowMapper<Meal> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Meal.class);
 
@@ -22,6 +23,22 @@ public abstract class AbstractJdbcMealRepository implements MealRepository
     protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     protected SimpleJdbcInsert insertMeal;
+
+    @Autowired
+    public void setJdbcTemplate(JdbcTemplate jdbcTemplate)
+    {
+        this.jdbcTemplate = jdbcTemplate;
+
+        this.insertMeal = new SimpleJdbcInsert(jdbcTemplate)
+            .withTableName("meals")
+            .usingGeneratedKeyColumns("id");
+    }
+
+    @Autowired
+    public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate)
+    {
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    }
 
     @Override
     public Meal save(Meal meal, int userId)
@@ -81,5 +98,5 @@ public abstract class AbstractJdbcMealRepository implements MealRepository
             ROW_MAPPER, userId, convertDateTime(startDate), convertDateTime(endDate));
     }
 
-    protected abstract <T> T convertDateTime(LocalDateTime ldc);
+    protected abstract T convertDateTime(LocalDateTime ldc);
 }
