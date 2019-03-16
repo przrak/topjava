@@ -18,24 +18,24 @@ public abstract class AbstractMealServiceTest extends AbstractServiceTest {
     protected MealService service;
 
     @Test
-    public void create() throws Exception {
-        Meal newMeal = getCreated();
-        Meal created = service.create(newMeal, USER_ID);
-        newMeal.setId(created.getId());
-        assertMatch(newMeal, created);
-        assertMatch(service.getAll(USER_ID), newMeal, MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1);
-    }
-
-    @Test
     public void delete() throws Exception {
         service.delete(MEAL1_ID, USER_ID);
         assertMatch(service.getAll(USER_ID), MEAL6, MEAL5, MEAL4, MEAL3, MEAL2);
     }
 
     @Test
-    public void deletedNotFound() throws Exception {
+    public void deleteNotFound() throws Exception {
         thrown.expect(NotFoundException.class);
         service.delete(MEAL1_ID, 1);
+    }
+
+    @Test
+    public void create() throws Exception {
+        Meal newMeal = getCreated();
+        Meal created = service.create(newMeal, USER_ID);
+        newMeal.setId(created.getId());
+        assertMatch(newMeal, created);
+        assertMatch(service.getAll(USER_ID), newMeal, MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1);
     }
 
     @Test
