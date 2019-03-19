@@ -5,7 +5,7 @@
 <html>
 <head>
     <title>Calories management</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/style.css">
 </head>
 <body>
 <section>
@@ -53,8 +53,8 @@
                 </td>
                 <td>${meal.description}</td>
                 <td>${meal.calories}</td>
-                <td><a href="meals?action=update&id=${meal.id}">Update</a></td>
-                <td><a href="meals?action=delete&id=${meal.id}">Delete</a></td>
+                <td><a href="update/${meal.id}">Update</a></td>
+                <td><a href="delete?&id=${meal.id}">Delete</a></td>
             </tr>
         </c:forEach>
     </table>
