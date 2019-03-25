@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.repository.jdbc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -16,6 +17,7 @@ import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -33,6 +35,8 @@ public class JdbcUserRepositoryImpl implements UserRepository {
     private final SimpleJdbcInsert insertUser;
 
     private final DataSourceTransactionManager transactionManager;
+
+    private UserExtractor resultSetExtractor = new UserExtractor();
 
     @Autowired
     public JdbcUserRepositoryImpl(JdbcTemplate jdbcTemplate,
@@ -60,6 +64,11 @@ public class JdbcUserRepositoryImpl implements UserRepository {
                         "registered=:registered, enabled=:enabled, calories_per_day=:caloriesPerDay WHERE id=:id", parameterSource) == 0) {
             return null;
         }
+        else
+        {
+            jdbcTemplate.update("DELETE FROM user_roles where user_id=?", user.getId());
+        }
+        insertRolesBatch(user, new ArrayList<>(user.getRoles()));
         return user;
     }
 
@@ -84,7 +93,7 @@ public class JdbcUserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> getAll() {
-        return jdbcTemplate.query("SELECT * FROM users ORDER BY name, email", userExtractor);
+        return jdbcTemplate.query("SELECT * FROM users INNER JOIN user_roles ON users.id = user_roles.user_id ORDER BY name, email", resultSetExtractor);
     }
 
     public class UserExtractor implements ResultSetExtractor<List<User>> {
@@ -92,21 +101,46 @@ public class JdbcUserRepositoryImpl implements UserRepository {
         @Override
         public List<User> extractData(ResultSet rs) throws SQLException, DataAccessException {
 
-            Map<User, Collection<Role>> map = new HashMap<>();
+            User user;
+            List<User> users = new ArrayList<>();
+            Collection<Role> roles = new ArrayList<>();
             while (rs.next())
             {
-                System.out.println();
-//                if (users == null) {
-//                    users = new ArrayList<>();
-//                    roles = new Account(resultSet.getLong("ID"),
-//                            resultSet.getString("NAME"), ...);
-//                }
-//                extractedAccounts.add(account);
+                user = ROW_MAPPER.mapRow(rs, rs.getRow());
+                roles.clear();
 
+                if (users.contains(user))
+                {
+                    roles = users.get(users.indexOf(user)).getRoles();
+                    users.remove(user);
+                }
+
+                roles.add(Role.valueOf(rs.getString("role")));
+                user.setRoles(EnumSet.copyOf(roles));
+                users.add(user);
             }
-            return null;
+            return users;
         }
     }
 
-    private UserExtractor userExtractor = new UserExtractor();
+
+
+    private void insertRolesBatch(final User user, final List<Role> roles){
+
+        String sql = "INSERT INTO USER_ROLES (USER_ID, ROLE) VALUES (?, ?)";
+
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setLong(1, user.getId());
+                ps.setString(2, roles.get(i).toString());
+            }
+
+            @Override
+            public int getBatchSize() {
+                return roles.size();
+            }
+        });
+    }
 }
