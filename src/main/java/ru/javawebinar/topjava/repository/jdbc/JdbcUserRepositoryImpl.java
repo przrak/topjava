@@ -21,6 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 @Transactional(readOnly = true)
@@ -115,6 +116,32 @@ public class JdbcUserRepositoryImpl implements UserRepository {
                 user.setRoles(EnumSet.copyOf(roles));
                 users.add(user);
             }
+
+            /*
+            User user;
+            Collection<Role> roles;
+            Map<User, Collection<Role>> map = new HashMap<>();
+            while (rs.next())
+            {
+                user = ROW_MAPPER.mapRow(rs, rs.getRow());
+
+                if (map.containsKey(user))
+                {
+                    roles = map.get(user);
+                    roles.add(Role.valueOf(rs.getString("role")));
+                }
+                else
+                {
+                    roles = new ArrayList<>();
+                    roles.add(Role.valueOf(rs.getString("role")));
+                    map.put(user, roles);
+                }
+
+                map.keySet().forEach(u -> u.setRoles(map.get(u)));
+            }
+
+            return new ArrayList<>(map.keySet());
+             */
             return users;
         }
     }
