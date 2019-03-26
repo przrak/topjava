@@ -57,6 +57,6 @@ abstract public class AbstractServiceTest {
     }
 
     protected boolean isJdbc() {
-        return java.util.Arrays.asList(environment.getActiveProfiles()).indexOf("jdbc") > -1;
+        return java.util.Arrays.asList(environment.getActiveProfiles()).contains("jdbc");
     }
 }
