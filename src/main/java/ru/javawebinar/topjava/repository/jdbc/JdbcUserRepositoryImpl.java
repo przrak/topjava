@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Role;
@@ -60,9 +59,7 @@ public class JdbcUserRepositoryImpl implements UserRepository {
                 "UPDATE users SET name=:name, email=:email, password=:password, " +
                         "registered=:registered, enabled=:enabled, calories_per_day=:caloriesPerDay WHERE id=:id", parameterSource) == 0) {
             return null;
-        }
-        else
-        {
+        } else {
             jdbcTemplate.update("DELETE FROM user_roles where user_id=?", user.getId());
         }
         insertRolesBatch(user, new ArrayList<>(user.getRoles()));
@@ -93,62 +90,38 @@ public class JdbcUserRepositoryImpl implements UserRepository {
         return jdbcTemplate.query("SELECT * FROM users LEFT JOIN user_roles ON users.id = user_roles.user_id ORDER BY name, email", resultSetExtractor);
     }
 
-    public class UserExtractor implements ResultSetExtractor<List<User>> {
+    public class UserExtractor implements ResultSetExtractor<List> {
 
         @Override
         public List<User> extractData(ResultSet rs) throws SQLException, DataAccessException {
 
             User user;
-            List<User> users = new ArrayList<>();
             Collection<Role> roles = new ArrayList<>();
-            while (rs.next())
-            {
+            Map<Integer, User> map = new HashMap<>();
+
+            while (rs.next()) {
                 user = ROW_MAPPER.mapRow(rs, rs.getRow());
                 roles.clear();
 
-                if (users.contains(user))
-                {
-                    roles = users.get(users.indexOf(user)).getRoles();
-                    users.remove(user);
+                if (map.containsKey(user.getId())) {
+                    user = map.get(user.getId());
+                    roles = user.getRoles();
                 }
 
                 roles.add(Role.valueOf(rs.getString("role")));
                 user.setRoles(EnumSet.copyOf(roles));
-                users.add(user);
+
+                map.putIfAbsent(user.getId(), user);
             }
 
-            /*
-            User user;
-            Collection<Role> roles;
-            Map<User, Collection<Role>> map = new HashMap<>();
-            while (rs.next())
-            {
-                user = ROW_MAPPER.mapRow(rs, rs.getRow());
-
-                if (map.containsKey(user))
-                {
-                    roles = map.get(user);
-                    roles.add(Role.valueOf(rs.getString("role")));
-                }
-                else
-                {
-                    roles = new ArrayList<>();
-                    roles.add(Role.valueOf(rs.getString("role")));
-                    map.put(user, roles);
-                }
-
-                map.keySet().forEach(u -> u.setRoles(map.get(u)));
-            }
-
-            return new ArrayList<>(map.keySet());
-             */
-            return users;
+            return map.values().stream()
+                    .sorted(Comparator.comparing(User::getName).thenComparing(User::getEmail))
+                    .collect(Collectors.toList());
         }
     }
 
 
-
-    private void insertRolesBatch(final User user, final List<Role> roles){
+    private void insertRolesBatch(final User user, final List<Role> roles) {
 
         String sql = "INSERT INTO USER_ROLES (USER_ID, ROLE) VALUES (?, ?)";
 
