@@ -20,6 +20,7 @@ import ru.javawebinar.topjava.TimingRules;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static ru.javawebinar.topjava.util.ValidationUtil.getRootCause;
+import static ru.javawebinar.topjava.Profiles.JDBC;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -28,7 +29,7 @@ import static ru.javawebinar.topjava.util.ValidationUtil.getRootCause;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(resolver = ActiveDbProfileResolver.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-abstract public class AbstractServiceTest {
+public abstract class AbstractServiceTest {
     @ClassRule
     public static ExternalResource summary = TimingRules.SUMMARY;
 
@@ -57,6 +58,6 @@ abstract public class AbstractServiceTest {
     }
 
     protected boolean isJdbc() {
-        return java.util.Arrays.asList(environment.getActiveProfiles()).contains("jdbc");
+        return java.util.Arrays.asList(environment.getActiveProfiles()).contains(JDBC);
     }
 }
