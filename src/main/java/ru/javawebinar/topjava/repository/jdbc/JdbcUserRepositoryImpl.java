@@ -21,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Repository
 @Transactional(readOnly = true)
@@ -96,27 +97,23 @@ public class JdbcUserRepositoryImpl implements UserRepository {
         public List<User> extractData(ResultSet rs) throws SQLException, DataAccessException {
 
             User user;
-            Collection<Role> roles = new ArrayList<>();
-            Map<Integer, User> map = new HashMap<>();
+            Map<Integer, User> map = new LinkedHashMap<>();
 
             while (rs.next()) {
                 user = ROW_MAPPER.mapRow(rs, rs.getRow());
-                roles.clear();
+                user.setRoles(List.of(Role.valueOf(rs.getString("role")))
+                );
 
-                if (map.containsKey(user.getId())) {
-                    user = map.get(user.getId());
-                    roles = user.getRoles();
-                }
-
-                roles.add(Role.valueOf(rs.getString("role")));
-                user.setRoles(EnumSet.copyOf(roles));
-
-                map.putIfAbsent(user.getId(), user);
+                map.merge(user.getId(), user, (oldUser, newUser) ->
+                {
+                    oldUser.setRoles(Stream.concat(oldUser.getRoles().stream(),
+                            newUser.getRoles().stream())
+                            .collect(Collectors.toSet()));
+                    return oldUser;
+                });
             }
 
-            return map.values().stream()
-                    .sorted(Comparator.comparing(User::getName).thenComparing(User::getEmail))
-                    .collect(Collectors.toList());
+            return new ArrayList<>(map.values());
         }
     }
 
