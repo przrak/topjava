@@ -91,24 +91,35 @@ public class JdbcUserRepositoryImpl implements UserRepository {
         return jdbcTemplate.query("SELECT * FROM users LEFT JOIN user_roles ON users.id = user_roles.user_id ORDER BY name, email", resultSetExtractor);
     }
 
+//    public List<User> getAllOptional(String name, String email) {
+//        StringJoiner where = new StringJoiner(" AND ", " WHERE " , "").setEmptyValue("");
+//        if (name != null)
+//            where.add("name = :name");
+//        if (email != null)
+//            where.add("email = :email");
+//
+//        String sql = "SELECT * FROM users" + where;
+//        Map<String, Object> params = new HashMap<>();
+//        params.put("name", name);
+//        params.put("email", email);
+//
+//        return jdbcTemplate.query(sql, params, ROW_MAPPER);
+//    }
+
     public class UserExtractor implements ResultSetExtractor<List> {
 
         @Override
         public List<User> extractData(ResultSet rs) throws SQLException, DataAccessException {
 
-            User user;
             Map<Integer, User> map = new LinkedHashMap<>();
 
             while (rs.next()) {
-                user = ROW_MAPPER.mapRow(rs, rs.getRow());
-                user.setRoles(List.of(Role.valueOf(rs.getString("role")))
-                );
+                User user = ROW_MAPPER.mapRow(rs, rs.getRow());
+                user.setRoles(EnumSet.of(Role.valueOf(rs.getString("role"))));
 
                 map.merge(user.getId(), user, (oldUser, newUser) ->
                 {
-                    oldUser.setRoles(Stream.concat(oldUser.getRoles().stream(),
-                            newUser.getRoles().stream())
-                            .collect(Collectors.toSet()));
+                    oldUser.getRoles().addAll(newUser.getRoles());
                     return oldUser;
                 });
             }
