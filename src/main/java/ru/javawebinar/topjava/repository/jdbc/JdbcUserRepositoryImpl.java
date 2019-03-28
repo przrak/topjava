@@ -63,7 +63,7 @@ public class JdbcUserRepositoryImpl implements UserRepository {
         } else {
             jdbcTemplate.update("DELETE FROM user_roles where user_id=?", user.getId());
         }
-        insertRolesBatch(user, new ArrayList<>(user.getRoles()));
+        insertRoles(user);
         return user;
     }
 
@@ -118,8 +118,9 @@ public class JdbcUserRepositoryImpl implements UserRepository {
     }
 
 
-    private void insertRolesBatch(final User user, final List<Role> roles) {
+    private void insertRoles(final User user) {
 
+        List<Role> roles = new ArrayList<>(user.getRoles());
         String sql = "INSERT INTO USER_ROLES (USER_ID, ROLE) VALUES (?, ?)";
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
@@ -135,5 +136,16 @@ public class JdbcUserRepositoryImpl implements UserRepository {
                 return roles.size();
             }
         });
+    }
+
+    private void deleteRoles(User u) {
+        jdbcTemplate.update("DELETE FROM user_roles WHERE user_id=?", u.getId());
+    }
+
+    private User setRoles(User u) {
+        List<Role> roles = jdbcTemplate.query("SELECT role FROM user_roles WHERE user_id=?",
+                (rs, rowNum) -> Role.valueOf(rs.getString("role")), u.getId());
+        u.setRoles(roles);
+        return u;
     }
 }
