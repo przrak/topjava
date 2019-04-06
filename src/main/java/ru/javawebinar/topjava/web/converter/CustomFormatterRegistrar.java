@@ -1,4 +1,4 @@
-package ru.javawebinar.topjava.web.meal.converter;
+package ru.javawebinar.topjava.web.converter;
 
 import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;

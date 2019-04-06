@@ -25,26 +25,33 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
-    <bean id="conversionService"
-          class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
-        <property name="registerDefaultFormatters" value="false" />
+<!--    <bean class="org.springframework.format.support.FormattingConversionServiceFactoryBean" id="conversionService">-->
+<!--        <property name="formatters">-->
+<!--            <set>-->
+<!--                <bean class="org.springframework.format.number.NumberFormatAnnotationFormatterFactory" />-->
+<!--                <bean class="ru.javawebinar.topjava.web.meal.converter.LocalDateFormatter">-->
+<!--                    <constructor-arg value="yyyy-MM-dd"/>-->
+<!--                </bean>-->
+<!--                <bean class="ru.javawebinar.topjava.web.meal.converter.LocalTimeFormatter">-->
+<!--                    <constructor-arg value="HH:mm"/>-->
+<!--                </bean>-->
+<!--            </set>-->
+<!--        </property>-->
+<!--        <property name="formatterRegistrars">-->
+<!--            <set>-->
+<!--                <bean class="ru.javawebinar.topjava.web.meal.converter.CustomFormatterRegistrar">-->
+<!--                    <constructor-arg index="0" value="yyyy-MM-dd"/>-->
+<!--                    <constructor-arg index="1" value="HH:mm"/>-->
+<!--                </bean>-->
+<!--            </set>-->
+<!--        </property>-->
+<!--    </bean>-->
+
+    <bean class="org.springframework.format.support.FormattingConversionServiceFactoryBean" id="conversionService">
         <property name="formatters">
             <set>
-                <bean class="org.springframework.format.number.NumberFormatAnnotationFormatterFactory" />
-                <bean class="ru.javawebinar.topjava.web.meal.converter.LocalDateFormatter">
-                    <constructor-arg value="yyyy-MM-dd"/>
-                </bean>
-                <bean class="ru.javawebinar.topjava.web.meal.converter.LocalTimeFormatter">
-                    <constructor-arg value="HH:mm"/>
-                </bean>
-            </set>
-        </property>
-        <property name="formatterRegistrars">
-            <set>
-                <bean class="ru.javawebinar.topjava.web.meal.converter.CustomFormatterRegistrar">
-                    <constructor-arg index="0" value="yyyy-MM-dd"/>
-                    <constructor-arg index="1" value="HH:mm"/>
-                </bean>
+                <bean class="ru.javawebinar.topjava.web.converter.DateTimeFormatters.LocalTimeFormatter"/>
+                <bean class="ru.javawebinar.topjava.web.converter.DateTimeFormatters.LocalDateFormatter"/>
             </set>
         </property>
     </bean>

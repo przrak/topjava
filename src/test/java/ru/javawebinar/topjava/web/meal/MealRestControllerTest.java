@@ -85,7 +85,9 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testGetFilter() throws Exception {
-        mockMvc.perform(get(REST_URL + "filter?startDate=2015-05-30&endDate=2015-05-30&startTime=00:00:00&endTime=21:23:59"))
+        mockMvc.perform(get(REST_URL + "filter")
+                .param("startDate", "2015-05-30").param("startTime", "00:00")
+                .param("endDate", "2015-05-30").param("endTime", "21:23"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
