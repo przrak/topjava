@@ -33,7 +33,14 @@ function deleteRow(id) {
 }
 
 function updateTable() {
-    $.get(context.ajaxUrl, function (data) {
+    let sd = $("input[name='startDate']").val() ? $("input[name='startDate']").val() : "";
+    let ed = $("input[name='endDate']").val() ? $("input[name='endDate']").val() : "";
+    let st = $("input[name='startTime']").val() ? $("input[name='startTime']").val() : "";
+    let et = $("input[name='endTime']").val() ? $("input[name='endTime']").val() : "";
+
+
+    $.get(context.ajaxUrl + "filter?startDate=" + sd + "&endDate=" + ed
+        + "&startTime=" + st + "&endTime=" + et, function (data) {
         context.datatableApi.clear().rows.add(data).draw();
     });
 }
