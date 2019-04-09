@@ -40,3 +40,25 @@ $(function () {
         }
     );
 });
+
+function setActive() {
+    let checkbox = $('input[type="checkbox"]');
+    let id = checkbox.attr("id");
+    let checked;
+    alert("checkbox" + id);
+    if (checkbox.is(":checked")) {
+        checked = true;
+    } else if (checkbox.is(":not(:checked)")) {
+        checked = false;
+    }
+    var data = {};
+    data['checked'] = checked;
+    $.ajax({
+        url: context.ajaxUrl + id,
+        type: "PUT",
+        data: data.serialize()
+    }).done(function () {
+        updateTable();
+        successNoty("Updated");
+    });
+}
