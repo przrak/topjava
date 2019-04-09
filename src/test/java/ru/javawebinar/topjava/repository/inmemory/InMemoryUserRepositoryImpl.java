@@ -40,6 +40,7 @@ public class InMemoryUserRepositoryImpl extends InMemoryBaseRepositoryImpl<User>
 
     @Override
     public boolean updateActiveState(int id, Boolean enabled) {
-        return false;
+        entryMap.get(id).setEnabled(enabled);
+        return true;
     }
 }
