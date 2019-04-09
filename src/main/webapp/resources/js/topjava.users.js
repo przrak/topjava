@@ -41,24 +41,16 @@ $(function () {
     );
 });
 
-function setActive() {
-    let checkbox = $('input[type="checkbox"]');
+function setEnabled() {
+    var checkbox = $('input[name="enableCheckbox"]');
     let id = checkbox.attr("id");
-    let checked;
-    alert("checkbox" + id);
-    if (checkbox.is(":checked")) {
-        checked = true;
-    } else if (checkbox.is(":not(:checked)")) {
-        checked = false;
-    }
-    var data = {};
-    data['checked'] = checked;
     $.ajax({
-        url: context.ajaxUrl + id,
-        type: "PUT",
-        data: data.serialize()
+        url: context.ajaxUrl + id + "?enabled=" + checkbox.prop('checked'),
+        type: "GET"
     }).done(function () {
-        updateTable();
+        $.get(context.ajaxUrl, function (data) {
+            context.datatableApi.clear().rows.add(data).draw();
+        });
         successNoty("Updated");
     });
 }
