@@ -13,7 +13,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static ru.javawebinar.topjava.MealTestData.MEAL1_ID;
 import static ru.javawebinar.topjava.UserTestData.*;
 
 public abstract class AbstractUserServiceTest extends AbstractServiceTest {
@@ -96,5 +98,11 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
         updated.setEnabled(true);
         service.updateActiveState(updated.getId(), updated.isEnabled());
         assertMatch(service.get(USER_ID), updated);
+    }
+
+    @Test
+    void updateActiveStateNotFound() throws Exception {
+        NotFoundException e = assertThrows(NotFoundException.class, () -> service.updateActiveState(USER_ID + 100, true));
+        assertEquals(e.getMessage(), "Not found entity with id=" + (USER_ID + 100));
     }
 }

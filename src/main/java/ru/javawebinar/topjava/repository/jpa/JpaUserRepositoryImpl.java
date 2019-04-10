@@ -73,6 +73,7 @@ public class JpaUserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    @Transactional
     public boolean updateActiveState(int id, Boolean enabled) {
         return em.createQuery("UPDATE User u SET u.enabled=?1 WHERE u.id=?2")
                 .setParameter(1, enabled)
