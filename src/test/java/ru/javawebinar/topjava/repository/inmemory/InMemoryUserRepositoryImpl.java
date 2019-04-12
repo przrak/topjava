@@ -38,9 +38,9 @@ public class InMemoryUserRepositoryImpl extends InMemoryBaseRepositoryImpl<User>
                 .orElse(null);
     }
 
-    @Override
-    public boolean updateActiveState(int id, Boolean enabled) {
-        entryMap.get(id).setEnabled(enabled);
-        return true;
-    }
+//    @Override
+//    public boolean updateActiveState(int id, Boolean enabled) {
+//        entryMap.get(id).setEnabled(enabled);
+//        return true;
+//    }
 }

@@ -13,9 +13,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static ru.javawebinar.topjava.MealTestData.MEAL1_ID;
+import static org.junit.jupiter.api.Assertions.*;
 import static ru.javawebinar.topjava.UserTestData.*;
 
 public abstract class AbstractUserServiceTest extends AbstractServiceTest {
@@ -92,17 +90,25 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
         assertMatch(all, ADMIN, USER);
     }
 
-    @Test
-    void updateActiveState() throws Exception {
-        User updated = new User(USER);
-        updated.setEnabled(true);
-        service.updateActiveState(updated.getId(), updated.isEnabled());
-        assertMatch(service.get(USER_ID), updated);
-    }
+//    @Test
+//    void updateActiveState() throws Exception {
+//        User updated = new User(USER);
+//        updated.setEnabled(true);
+//        service.updateActiveState(updated.getId(), updated.isEnabled());
+//        assertMatch(service.get(USER_ID), updated);
+//    }
+//
+//    @Test
+//    void updateActiveStateNotFound() throws Exception {
+//        NotFoundException e = assertThrows(NotFoundException.class, () -> service.updateActiveState(USER_ID + 100, true));
+//        assertEquals(e.getMessage(), "Not found entity with id=" + (USER_ID + 100));
+//    }
 
     @Test
-    void updateActiveStateNotFound() throws Exception {
-        NotFoundException e = assertThrows(NotFoundException.class, () -> service.updateActiveState(USER_ID + 100, true));
-        assertEquals(e.getMessage(), "Not found entity with id=" + (USER_ID + 100));
+    void enable() {
+        service.updateActiveState(USER_ID, false);
+        assertFalse(service.get(USER_ID).isEnabled());
+        service.updateActiveState(USER_ID, true);
+        assertTrue(service.get(USER_ID).isEnabled());
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
@@ -66,9 +67,18 @@ public class UserServiceImpl implements UserService {
         return checkNotFoundWithId(repository.getWithMeals(id), id);
     }
 
-    @Override
+//    @Override
+//    @CacheEvict(value = "users", allEntries = true)
+//    public void updateActiveState(int id, Boolean enabled) {
+//        checkNotFoundWithId(repository.updateActiveState(id, enabled), id);
+//    }
+
     @CacheEvict(value = "users", allEntries = true)
-    public void updateActiveState(int id, Boolean enabled) {
-        checkNotFoundWithId(repository.updateActiveState(id, enabled), id);
+    @Override
+    @Transactional
+    public void updateActiveState(int id, boolean enabled) {
+        User user = get(id);
+        user.setEnabled(enabled);
+        repository.save(user);  // !! need only for JDBC implementation
     }
 }

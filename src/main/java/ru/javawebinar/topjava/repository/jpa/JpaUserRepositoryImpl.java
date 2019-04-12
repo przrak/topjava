@@ -72,12 +72,12 @@ public class JpaUserRepositoryImpl implements UserRepository {
         return em.createNamedQuery(User.ALL_SORTED, User.class).getResultList();
     }
 
-    @Override
-    @Transactional
-    public boolean updateActiveState(int id, Boolean enabled) {
-        return em.createQuery("UPDATE User u SET u.enabled=?1 WHERE u.id=?2")
-                .setParameter(1, enabled)
-                .setParameter(2, id)
-                .executeUpdate() > 0;
-    }
+//    @Override
+//    @Transactional
+//    public boolean updateActiveState(int id, Boolean enabled) {
+//        return em.createQuery("UPDATE User u SET u.enabled=?1 WHERE u.id=?2")
+//                .setParameter(1, enabled)
+//                .setParameter(2, id)
+//                .executeUpdate() > 0;
+//    }
 }
