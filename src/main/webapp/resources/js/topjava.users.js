@@ -36,27 +36,10 @@ $(function () {
                         "asc"
                     ]
                 ]
-            })
+            }),
+            updateTable: function () {
+                $.get("ajax/admin/users/", updateTableByData);
+            }
         }
     );
-    $(":checkbox").change(function () {
-        let checkbox = $(this);
-        let id = checkbox.closest("tr").prop('id');
-        let checked = checkbox.prop('checked');
-        $.ajax({
-            url: context.ajaxUrl + id + "?enabled=" + checked,
-            type: "GET"
-        }).done(function () {
-            $.get(context.ajaxUrl, function (data) {
-                context.datatableApi.clear().rows.add(data).draw();
-            });
-            if (checked) {
-                checkbox.closest("tr").removeClass("disabled").addClass("enabled");
-            } else {
-                checkbox.closest("tr").removeClass("enabled").addClass("disabled");
-            }
-            successNoty(checked ? "Enabled" : "Disabled");
-        });
-    });
-
 });

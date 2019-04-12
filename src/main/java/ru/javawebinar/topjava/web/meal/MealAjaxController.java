@@ -12,7 +12,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ajax/meals")
+@RequestMapping("/ajax/profile/meals")
 public class MealAjaxController extends AbstractMealController{
 
     @Override
@@ -22,7 +22,7 @@ public class MealAjaxController extends AbstractMealController{
     }
 
     @Override
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") int id) {
         super.delete(id);
@@ -35,7 +35,6 @@ public class MealAjaxController extends AbstractMealController{
                                @RequestParam("dateTime") LocalDateTime dateTime,
                                @RequestParam("description") String description,
                                @RequestParam("calories") int calories) {
-
         Meal meal = new Meal(id, dateTime, description, calories);
         if (meal.isNew()) {
             super.create(meal);
@@ -43,12 +42,12 @@ public class MealAjaxController extends AbstractMealController{
     }
 
     @Override
-    @GetMapping(value = "/filter")
+    @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<MealTo> getBetween(
-            @RequestParam(required = false) LocalDate startDate,
-            @RequestParam(required = false) LocalTime startTime,
-            @RequestParam(required = false) LocalDate endDate,
-            @RequestParam(required = false) LocalTime endTime) {
+            @RequestParam(value = "startDate", required = false) LocalDate startDate,
+            @RequestParam(value = "startTime", required = false) LocalTime startTime,
+            @RequestParam(value = "endDate", required = false) LocalDate endDate,
+            @RequestParam(value = "endTime", required = false) LocalTime endTime) {
         return super.getBetween(startDate, startTime, endDate, endTime);
     }
 }
