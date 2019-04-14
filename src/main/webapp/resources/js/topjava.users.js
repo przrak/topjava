@@ -9,6 +9,7 @@ function enable(chkbox, id) {
         data: "enabled=" + enabled
     }).done(function () {
         chkbox.closest("tr").attr("data-userEnabled", enabled);
+        // chkbox.closest("tr").css("text-decoration", enabled ? "none" : "line-through");
         successNoty(enabled ? "Enabled" : "Disabled");
     }).fail(function () {
         $(chkbox).prop("checked", !enabled);
