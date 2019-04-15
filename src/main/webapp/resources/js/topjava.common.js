@@ -12,13 +12,19 @@ function makeEditable(ctx) {
 }
 
 function add() {
-    $("#modalTitle").html(i18n["addTitle"]);
+    if (context.mealsOrUsers === "users")
+        $("#modalTitle").html(i18n["addUserTitle"]);
+    else if (context.mealsOrUsers === "meals")
+        $("#modalTitle").html(i18n["addMealTitle"]);
     form.find(":input").val("");
     $("#editRow").modal();
 }
 
 function updateRow(id) {
-    $("#modalTitle").html(i18n["editTitle"]);
+    if (context.mealsOrUsers === "users")
+        $("#modalTitle").html(i18n["editUserTitle"]);
+    else if (context.mealsOrUsers === "meals")
+        $("#modalTitle").html(i18n["editMealTitle"]);
     $.get(context.ajaxUrl + id, function (data) {
         $.each(data, function (key, value) {
             form.find("input[name='" + key + "']").val(value);
