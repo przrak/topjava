@@ -18,7 +18,6 @@ function enable(chkbox, id) {
 // $(document).ready(function () {
 $(function () {
     makeEditable({
-            mealsOrUsers: "users",
             ajaxUrl: userAjaxUrl,
             datatableApi: $("#datatable").DataTable({
                 "ajax": {
