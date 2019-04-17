@@ -13,6 +13,18 @@ function clearFilter() {
     $.get(mealAjaxUrl, updateTableByData);
 }
 
+$.ajaxSetup({
+    converters: {
+        "text json": function (stringData) {
+            const json = JSON.parse(stringData);
+            $(json).each(function () {
+                this.dateTime = this.dateTime.replace('T', ' ').substr(0, 16);
+            });
+            return json;
+        }
+    }
+});
+
 $(function () {
     makeEditable({
         mealsOrUsers: "meals",
@@ -26,13 +38,7 @@ $(function () {
             "info": true,
             "columns": [
                 {
-                    "data": "dateTime",
-                    "render": function (date, type, row) {
-                        if (type === "display") {
-                            return date.substring(0, 10);
-                        }
-                        return date;
-                    }
+                    "data": "dateTime"
                 },
                 {
                     "data": "description"
@@ -66,7 +72,6 @@ $(function () {
 
     $.datetimepicker.setLocale((navigator.language && navigator.language.indexOf("-")  > -1) ? navigator.language.split("-")[0] : "en");
 
-//  http://xdsoft.net/jqplugins/datetimepicker/
     $('#startDate').datetimepicker({
         timepicker: false,
         format: 'Y-m-d',
