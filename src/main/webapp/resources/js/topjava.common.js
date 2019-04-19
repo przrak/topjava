@@ -2,6 +2,19 @@ let context, form;
 
 function makeEditable(ctx) {
     context = ctx;
+    context.datatableApi = $("#datatable").DataTable(
+        // https://api.jquery.com/jquery.extend/#jQuery-extend-deep-target-object1-objectN
+        $.extend(true, ctx.datatableOpts,
+            {
+                "ajax": {
+                    "url": context.ajaxUrl,
+                    "dataSrc": ""
+                },
+                "paging": false,
+                "info": true,
+            }
+        ));
+
     form = $('#detailsForm');
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
         failNoty(jqXHR);
@@ -12,19 +25,13 @@ function makeEditable(ctx) {
 }
 
 function add() {
-    if (context.mealsOrUsers === "users")
-        $("#modalTitle").html(i18n["addUserTitle"]);
-    else if (context.mealsOrUsers === "meals")
-        $("#modalTitle").html(i18n["addMealTitle"]);
+    $("#modalTitle").html(i18n["addTitle"]);
     form.find(":input").val("");
     $("#editRow").modal();
 }
 
 function updateRow(id) {
-    if (context.mealsOrUsers === "users")
-        $("#modalTitle").html(i18n["editUserTitle"]);
-    else if (context.mealsOrUsers === "meals")
-        $("#modalTitle").html(i18n["editMealTitle"]);
+    $("#modalTitle").html(i18n["editTitle"]);
     $.get(context.ajaxUrl + id, function (data) {
         $.each(data, function (key, value) {
             form.find("input[name='" + key + "']").val(value);

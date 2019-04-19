@@ -13,32 +13,19 @@ function clearFilter() {
     $.get(mealAjaxUrl, updateTableByData);
 }
 
-$.ajaxSetup({
-    converters: {
-        "text json": function (stringData) {
-            const json = JSON.parse(stringData);
-            $(json).each(function () {
-                this.dateTime = this.dateTime.replace('T', ' ').substr(0, 16);
-            });
-            return json;
-        }
-    }
-});
-
 $(function () {
     makeEditable({
-        mealsOrUsers: "meals",
         ajaxUrl: mealAjaxUrl,
-        datatableApi: $("#datatable").DataTable({
-            "ajax": {
-                "url": mealAjaxUrl,
-                "dataSrc": ""
-            },
-            "paging": false,
-            "info": true,
+        datatableOpts: {
             "columns": [
                 {
-                    "data": "dateTime"
+                    "data": "dateTime",
+                    "render": function (date, type, row) {
+                        if (type === 'display') {
+                            return date.replace('T', ' ').substr(0, 16);
+                        }
+                        return date;
+                    }
                 },
                 {
                     "data": "description"
@@ -47,14 +34,14 @@ $(function () {
                     "data": "calories"
                 },
                 {
-                    "orderable": false,
+                    "render": renderEditBtn,
                     "defaultContent": "",
-                    "render": renderEditBtn
+                    "orderable": false
                 },
                 {
-                    "orderable": false,
+                    "render": renderDeleteBtn,
                     "defaultContent": "",
-                    "render": renderDeleteBtn
+                    "orderable": false
                 }
             ],
             "order": [
@@ -65,33 +52,8 @@ $(function () {
             ],
             "createdRow": function (row, data, dataIndex) {
                 $(row).attr("data-mealExcess", data.excess);
-            }
-        }),
+            },
+        },
         updateTable: updateFilteredTable
-    });
-
-    $.datetimepicker.setLocale((navigator.language && navigator.language.indexOf("-")  > -1) ? navigator.language.split("-")[0] : "en");
-
-    $('#startDate').datetimepicker({
-        timepicker: false,
-        format: 'Y-m-d',
-        formatDate: 'Y-m-d'
-    });
-    $('#endDate').datetimepicker({
-        timepicker: false,
-        format: 'Y-m-d',
-        formatDate: 'Y-m-d'
-    });
-    $('#startTime').datetimepicker({
-        datepicker: false,
-        format: 'H:i'
-    });
-    $('#endTime').datetimepicker({
-        datepicker: false,
-        format: 'H:i'
-    });
-
-    $('#dateTime').datetimepicker({
-        format: 'Y-m-d H:i'
     });
 });
