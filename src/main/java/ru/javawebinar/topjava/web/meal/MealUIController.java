@@ -25,7 +25,7 @@ public class MealUIController extends AbstractMealController {
     }
 
     @Override
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}")
     public Meal get(@PathVariable("id") int id) {
         return super.get(id);
     }
@@ -36,7 +36,6 @@ public class MealUIController extends AbstractMealController {
     public void delete(@PathVariable("id") int id) {
         super.delete(id);
     }
-
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
