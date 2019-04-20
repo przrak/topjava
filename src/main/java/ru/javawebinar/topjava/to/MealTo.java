@@ -1,7 +1,11 @@
 package ru.javawebinar.topjava.to;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
+import ru.javawebinar.topjava.View;
 import ru.javawebinar.topjava.util.DateTimeUtil;
 
 import javax.validation.constraints.NotBlank;
@@ -15,7 +19,8 @@ public class MealTo extends BaseTo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @NotNull
-    @DateTimeFormat(pattern = DateTimeUtil.DATE_TIME_PATTERN)
+//    @DateTimeFormat(pattern = DateTimeUtil.DATE_TIME_PATTERN)
+//    @JsonView(View.JsonREST.class) НЕ РАБОТАЕТ
     private LocalDateTime dateTime;
 
     @NotBlank
@@ -86,6 +91,18 @@ public class MealTo extends BaseTo implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id, dateTime, description, calories, excess);
+    }
+
+    @JsonGetter
+    @JsonView(View.JsonUI.class)
+    @JsonFormat(pattern = DateTimeUtil.DATE_TIME_PATTERN)
+    public LocalDateTime getDateTimeUI() {
+        return dateTime;
+    }
+
+    @DateTimeFormat(pattern = DateTimeUtil.DATE_TIME_PATTERN)
+    public void setDateTimeUI(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
     @Override
