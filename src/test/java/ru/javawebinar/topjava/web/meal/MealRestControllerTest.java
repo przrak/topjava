@@ -14,9 +14,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.javawebinar.topjava.MealTestData.assertMatch;
+import static ru.javawebinar.topjava.MealTestData.contentJson;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.TestUtil.*;
-import static ru.javawebinar.topjava.UserTestData.USER;
+import static ru.javawebinar.topjava.UserTestData.*;
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 import static ru.javawebinar.topjava.util.MealsUtil.createWithExcess;
 import static ru.javawebinar.topjava.util.MealsUtil.getWithExcess;
@@ -30,16 +32,16 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testGet() throws Exception {
-        mockMvc.perform(get(REST_URL + MEAL1_ID)
-                .with(userHttpBasic(USER)))
+        mockMvc.perform(get(REST_URL + ADMIN_MEAL_ID)
+                .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertMatch(readFromJsonMvcResult(result, Meal.class), MEAL1));
+                .andExpect(result -> assertMatch(readFromJsonMvcResult(result, Meal.class), ADMIN_MEAL1));
     }
-    
+
     @Test
-    void testUnAuth() throws Exception {
+    void testGetUnauth() throws Exception {
         mockMvc.perform(get(REST_URL + MEAL1_ID))
                 .andExpect(status().isUnauthorized());
     }
@@ -56,7 +58,8 @@ class MealRestControllerTest extends AbstractControllerTest {
     void testUpdate() throws Exception {
         Meal updated = getUpdated();
 
-        mockMvc.perform(put(REST_URL + MEAL1_ID).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put(REST_URL + MEAL1_ID)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated))
                 .with(userHttpBasic(USER)))
                 .andExpect(status().isNoContent());
@@ -70,13 +73,13 @@ class MealRestControllerTest extends AbstractControllerTest {
         ResultActions action = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(created))
-                .with(userHttpBasic(USER)));
+                .with(userHttpBasic(ADMIN)));
 
         Meal returned = readFromJson(action, Meal.class);
         created.setId(returned.getId());
 
         assertMatch(returned, created);
-        assertMatch(service.getAll(START_SEQ), created, MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1);
+        assertMatch(service.getAll(ADMIN_ID), ADMIN_MEAL2, created, ADMIN_MEAL1);
     }
 
     @Test
