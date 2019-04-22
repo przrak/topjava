@@ -11,7 +11,6 @@
                 <sec:authorize access="hasRole('ROLE_ADMIN')">
                     <a class="btn btn-info mr-1" href="users"><spring:message code="user.title"/></a>
                 </sec:authorize>
-                <%--@elvariable id="userTo" type="ru.javawebinar.topjava.to.UserTo"--%>
                 <a class="btn btn-info mr-1" href="profile">${userTo.name} <spring:message code="app.profile"/></a>
                 <button class="btn btn-primary" type="submit">
                     <span class="fa fa-sign-out"></span>
