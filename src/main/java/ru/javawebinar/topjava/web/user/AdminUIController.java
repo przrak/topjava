@@ -9,6 +9,7 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.to.UserTo;
 import ru.javawebinar.topjava.util.UserUtil;
 import ru.javawebinar.topjava.util.ValidationUtil;
+import ru.javawebinar.topjava.util.exception.IllegalRequestDataException;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -37,17 +38,19 @@ public class AdminUIController extends AbstractUserController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createOrUpdate(@Valid UserTo userTo, BindingResult result) {
-        if (result.hasErrors()) {
-            // TODO change to exception handler
-            return ValidationUtil.getErrorResponse(result);
+    public void createOrUpdate(@Valid UserTo userTo) {
+
+        try {
+            if (userTo.isNew()) {
+                super.create(UserUtil.createNewFromTo(userTo));
+            } else {
+                super.update(userTo, userTo.getId());
+            }
         }
-        if (userTo.isNew()) {
-            super.create(UserUtil.createNewFromTo(userTo));
-        } else {
-            super.update(userTo, userTo.getId());
+        catch (IllegalRequestDataException e)
+        {
+            throw new IllegalRequestDataException("User with this email already exists");
         }
-        return ResponseEntity.ok().build();
     }
 
     @Override
