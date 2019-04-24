@@ -46,7 +46,7 @@ public class ExceptionInfoHandler {
 
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler({BindException.class, MethodArgumentNotValidException.class})
-    public ErrorInfo lalala(HttpServletRequest req, Exception e) {
+    public ErrorInfo validationError(HttpServletRequest req, Exception e) {
         List<String> list;
         if (e instanceof BindException)
         {
