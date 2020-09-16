@@ -1,4 +1,4 @@
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/120a0430623240b68cdf64555215234a)](https://www.codacy.com/app/przrak/topjava?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=przrak/topjava&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/120a0430623240b68cdf64555215234a)](https://www.codacy.com/app/przrak/topjava?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=przrak/topjava&amp;utm_campaign=Badge_Grade) [![Build Status](https://travis-ci.com/przrak/topjava.svg?branch=master)](https://travis-ci.com/przrak/topjava)
 
 Java Enterprise Online Project 
 ===============================
